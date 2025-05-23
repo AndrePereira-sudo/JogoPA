@@ -4,16 +4,17 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-
 import java.awt.*;
 import java.lang.reflect.Array;
-
 import static javax.print.attribute.standard.MediaSizeName.C;
 
 /** First screen of the application. Displayed after the application is created. */
 public class FirstScreen implements Screen {
     SpriteBatch loteDesenho;
-    Texture jogadorTextura;
+
+    // Carregar texturas
+
+    Texture jogadorTextura = new Texture("jogador.png");
     Texture inimigoTextura;
     Texture obstaculoTextura;
     Texture backgroundTexture;
@@ -50,11 +51,11 @@ public class FirstScreen implements Screen {
         camera = new OrthographicCamera();
         camera.setToOrtho(false, 800, 600);
 
-        // Carregar texturas
-        jogadorTextura = new Texture(C:\Users\carlo\JogoPA\assets;"jogador.png");
-        inimigoTextura = new Texture(C:\Users\carlo\JogoPA\assets;"inimigo.png");
-        obstaculoTextura = new Texture(C:\Users\carlo\JogoPA\assets;"obstaculo.png");
-        backgroundTexture = new Texture(C:\Users\carlo\JogoPA\assets;"background.png");
+
+        jogadorTextura = new Texture(C:\Users\carlo\JogoPA\JogoPA"jogador.png");
+        inimigoTextura = new Texture(assets;"inimigo.png");
+        obstaculoTextura = new Texture(assets;"obstaculo.png");
+        backgroundTexture = new Texture(assets;"background.png");
 
         // For example, you can set up your game objects, load assets, etc.
 
