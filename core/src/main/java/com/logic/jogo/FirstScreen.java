@@ -120,11 +120,12 @@ public class FirstScreen implements Screen {
             obstaculo.y = 400 - (i / 4) * 150;
             obstaculo.width = 32;
             obstaculo.height = 32;
-            try {
-                obstaculos.wait();
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
+            //LIXO try {
+            //    obstaculos.wait();
+            //} catch (InterruptedException e) {
+            //    throw new RuntimeException(e);
+            //}
+            obstaculos.add(obstaculo);
         }
 
     }
@@ -133,8 +134,8 @@ public class FirstScreen implements Screen {
     public void render(float delta) {
 
         // Limpar o ecrã
-         Gdx.gl.glClearColor(0.1f, 0.1f, 0.1f, 1);
-         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        Gdx.gl.glClearColor(0.1f, 0.1f, 0.1f, 1);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         // novo Libgdx game site
         imput();
@@ -148,7 +149,7 @@ public class FirstScreen implements Screen {
         camera.update();
         loteDesenho.setProjectionMatrix(camera.combined);
 
-        loteDesenho.begin();
+        /*LIXO        loteDesenho.begin();
 
         // Desenhar jogador e inimigo
         loteDesenho.draw(jogadorTextura, jogador.x, jogador.y);
@@ -159,7 +160,7 @@ public class FirstScreen implements Screen {
             loteDesenho.draw(obstaculoTextura, o.x, o.y);
         }
 
-        loteDesenho.end();
+        loteDesenho.end();      */
     }
 
     private void draw() {
@@ -188,10 +189,10 @@ public class FirstScreen implements Screen {
         for (Rectangle jogador : jogadores) {
             loteDesenho.draw(jogadorTextura, jogador.x, jogador.y, jogador.width, jogador.height);
         }
-        // Desenhar texturas
-        for (Texture textura : texturas) {
-            loteDesenho.draw(textura, 0, 0);
-        }
+        // LIXO   ja feito Desenhar texturas
+        //for (Texture textura : texturas) {
+          //  loteDesenho.draw(textura, 0, 0);
+       // }
         // Desenhar sons (se necessário, mas geralmente não se desenham sons)
         // for (Object som : sons) {
         //     loteDesenho.draw(som, 0, 0);
@@ -222,8 +223,8 @@ public class FirstScreen implements Screen {
     @Override
     public void resize(int width, int height) {
         // Resize your screen here. The parameters represent the new window size.
-       Viewport viewport = new com.badlogic.gdx.utils.viewport.StretchViewport(800, 600, camera);
-       viewport.update(width, height, true);
+        Viewport viewport = new com.badlogic.gdx.utils.viewport.StretchViewport(800, 600, camera);
+        viewport.update(width, height, true);
     }
 
     @Override
@@ -244,6 +245,25 @@ public class FirstScreen implements Screen {
     @Override
     public void dispose() {
         // Destroy screen's assets here.
+        // Dispose of textures
+        jogadorTextura.dispose();
+        inimigoTextura.dispose();
+        obstaculoTextura.dispose();
+        backgroundTexture.dispose();
+        // Dispose of sprite batch
+        loteDesenho.dispose();
+        // Dispose of other resources if necessary
+        for (Texture textura : texturas) {
+            textura.dispose();
+        }
+        // Dispose of sounds if necessary
+        for (Object som : sons) {
+            // Assuming som is a Sound object, you would call som.dispose() if it were a Sound
+            // som.dispose(); // Uncomment if som is a Sound object
+
+        }
+
+
     }
 
 }
