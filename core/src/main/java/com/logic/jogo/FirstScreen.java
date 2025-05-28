@@ -1,15 +1,16 @@
 package com.logic.jogo;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
-
 import com.badlogic.gdx.graphics.Color;
 import java.util.ArrayList;
 
@@ -87,8 +88,8 @@ public class FirstScreen implements Screen {
 
         // Inicializar jogador
         jogador = new Rectangle();
-        jogador.x = 100;
-        jogador.y = 100;
+        jogador.x = 10;
+        jogador.y = 10;
         jogador.width = 32;
         jogador.height = 32;
         System.out.println(">> Jogador criados");
@@ -132,11 +133,17 @@ public class FirstScreen implements Screen {
         // Inicializar sons
         sons = new ArrayList<>();
         // Aqui você pode carregar sons, por exemplo:
-        // sons.add(Gdx.audio.newSound(Gdx.files.internal("som.mp3")));
-        // Inicializar obstáculos
-        // Inicializar obstáculos
+        //sons.add(Gdx.audio.newSound(Gdx.files.internal("som.mp3")));
 
+        //Inicializar obstáculos
 
+// Exemplo de criação de obstáculo
+        /*Rectangle obstaculo = new Rectangle();
+        obstaculo.x = 300;
+        obstaculo.y = 200;
+        obstaculo.width = 32;
+        obstaculo.height = 32;
+        obstaculos.add(obstaculo); */
 
         // Criar obstáculos
         obstaculos = new ArrayList<>();
@@ -217,7 +224,7 @@ public class FirstScreen implements Screen {
         // Desenhar inimigo
         loteDesenho.draw(inimigoTextura, inimigo.x, inimigo.y, inimigo.width, inimigo.height);
         // Desenhar obstáculos
-        for (Rectangle obstaculo : obstaculos) {
+        for (Rectangle obstaculo : obstaculos) { // Verificar se "obstaculos" está inicializado e não é null
             loteDesenho.draw(obstaculoTextura, obstaculo.x, obstaculo.y, obstaculo.width, obstaculo.height);
         }
         // Desenhar inimigos
@@ -247,7 +254,67 @@ public class FirstScreen implements Screen {
 
 
     private void imput() {
+        // Processar entrada do jogador
+        float speed = 200 * Gdx.graphics.getDeltaTime();
+        if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) jogador.x -= speed;
+        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) jogador.x += speed;
+        if (Gdx.input.isKeyPressed(Input.Keys.UP)) jogador.y += speed;
+        if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) jogador.y -= speed;
+
+        // Verificar se o jogador clicou com o mouse
+        // Obter a posição do mouse e converter para coordenadas do mundo
+        Vector3 mousePos = new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0);
+        camera.unproject(mousePos);
+
+        // Mover o jogador em direção à posição do mouse
+        // Se o mouse estiver pressionado, mover o jogador em direção à posição do mouse
+        if (Gdx.input.isTouched()) {
+        jogador.x += Math.signum(mousePos.x - jogador.x) * speed;
+        jogador.y += Math.signum(mousePos.y - jogador.y) * speed;
+        }
     }
+    
+    // Verificar colisões com obstáculos
+    // Aqui você pode implementar a lógica de colisão entre o jogador e os obstáculos
+    // Por exemplo, se o jogador colidir com um obstáculo, você pode empurrá-lo para trás ou impedir o movimento
+    private void checkCollisions() {
+        for (Rectangle obstaculo : obstaculos) {
+            if (jogador.overlaps(obstaculo)) {
+                // Resolver colisão (ex: empurrar jogador para trás)
+                if (jogador.x < obstaculo.x) {
+                    jogador.x = obstaculo.x - jogador.width; // Empurrar para a esquerda
+                } else if (jogador.x > obstaculo.x + obstaculo.width) {
+                    jogador.x = obstaculo.x + obstaculo.width; // Empurrar para a direita
+                }
+                if (jogador.y < obstaculo.y) {
+                    jogador.y = obstaculo.y - jogador.height; // Empurrar para cima
+                } else if (jogador.y > obstaculo.y + obstaculo.height) {
+                    jogador.y = obstaculo.y + obstaculo.height; // Empurrar para baixo
+                }
+
+            }
+        }
+    }
+// Verificar colisões com obstáculos
+    // Aqui você pode implementar a lógica de colisão entre o jogador e os obstáculos
+    // Por exemplo, se o jogador colidir com um obstáculo, você pode empurrá-lo para trás ou impedir o movimento
+     /*   for (Rectangle obstaculo : obstaculos) {
+            if (jogador.overlaps(obstaculo)) {
+                // Resolver colisão (ex: empurrar jogador para trás)
+                if (jogador.x < obstaculo.x) {
+                    jogador.x = obstaculo.x - jogador.width; // Empurrar para a esquerda
+                } else if (jogador.x > obstaculo.x + obstaculo.width) {
+                    jogador.x = obstaculo.x + obstaculo.width; // Empurrar para a direita
+                }
+                if (jogador.y < obstaculo.y) {
+                    jogador.y = obstaculo.y - jogador.height; // Empurrar para cima
+                } else if (jogador.y > obstaculo.y + obstaculo.height) {
+                    jogador.y = obstaculo.y + obstaculo.height; // Empurrar para baixo
+                }
+            }
+        }*/
+
+      //  input();
 
 
     // Libertar recursos
