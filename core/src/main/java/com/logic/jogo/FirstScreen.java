@@ -222,8 +222,8 @@ public class FirstScreen implements Screen {
     @Override
     public void resize(int width, int height) {
         // Resize your screen here. The parameters represent the new window size.
-      //  Runtime.Version viewport;
-      //  viewport.update(width, height, true);
+       Viewport viewport = new com.badlogic.gdx.utils.viewport.StretchViewport(800, 600, camera);
+       viewport.update(width, height, true);
     }
 
     @Override
