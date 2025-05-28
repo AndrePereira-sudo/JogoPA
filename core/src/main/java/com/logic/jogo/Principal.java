@@ -4,8 +4,18 @@ import com.badlogic.gdx.Game;
 
 /** {@link com.badlogic.gdx.ApplicationListener} implementation shared by all platforms. */
 public class Principal extends Game {
+
     @Override
     public void create() {
+        System.out.println(">> Entrou no create() de MainGame");
+       // This is the main method of the application. It is called when the application is launched.
+        // You can initialize your application here.
+        // Initialize the game and set the first screen
+
+
+        setScreen(new FirstScreen());
+        // erro abre e fecha de imediato
+        //setScreen(new FirstScreen());
 
       /* apenas necessário se for class abstrat  firstsreen
               // Initialize the game and set the first screen

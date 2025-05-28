@@ -5,11 +5,25 @@ import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
 import com.logic.jogo.Principal;
 
 /** Launches the desktop (LWJGL3) application. */
+
 public class Lwjgl3Launcher {
+    //new Lwjgl3Application(new Principal(), config); // Moved to createApplication method.
+    // This is the main method of the application. It is called when the application is launched.
+    // You can initialize your application here.
+
+    // Uncomment the following lines if you want to use StartupHelper for macOS support and Windows handling.
+
+
     public static void main(String[] args) {
         if (StartupHelper.startNewJvmIfRequired()) return; // This handles macOS support and helps on Windows.
         createApplication();
     }
+  /*  public static void main(String[] args) {
+        Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
+        config.setTitle("Teste");
+        config.setWindowedMode(800, 600);
+        new Lwjgl3Application(new Principal(), config);
+    }*/
 
     private static Lwjgl3Application createApplication() {
         return new Lwjgl3Application(new Principal(), getDefaultConfiguration());

@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.ScreenUtils;
+import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
 import com.badlogic.gdx.graphics.Color;
@@ -27,6 +28,7 @@ public class FirstScreen implements Screen {
     Texture obstaculoTextura;
     Texture backgroundTexture;
     OrthographicCamera camera;
+    Viewport viewport;
     Rectangle jogador;
     Rectangle inimigo;
     Rectangle obstaculo;
@@ -40,6 +42,11 @@ public class FirstScreen implements Screen {
     ArrayList<Texture> texturas;
     // Array de sons
     ArrayList<Object> sons;
+    // Array de texturas
+    // ArrayList<Texture> texturas;
+    // ArrayList<Sound> sons;
+    // ArrayList<Sound> sons;
+
 
 
 
@@ -52,11 +59,24 @@ public class FirstScreen implements Screen {
     public void show() {
         // Prepare your screen here.
         // Inicializar lote de desenho
+        System.out.println(">> Iniciou show()");
         loteDesenho = new SpriteBatch();
-
+        System.out.println(">> SpriteBatch criado");
         // Criar câmara ortográfica
         camera = new OrthographicCamera();
         camera.setToOrtho(false, 800, 600);
+
+        viewport = new StretchViewport(800, 600, camera);
+        viewport.apply();
+
+        // Inicializar texturas
+        // texturas = new ArrayList<>();
+        // Carregar texturas
+        // Certifique-se de que as texturas estão no diretório correto
+        // Gdx.files.internal("caminho/para/sua/textura.png")
+        // Aqui você pode carregar as texturas necessárias
+        // Exemplo de carregamento de texturas
+
 
         jogadorTextura = new Texture("jogador.png");
         inimigoTextura = new Texture("inimigo.png");
@@ -71,6 +91,7 @@ public class FirstScreen implements Screen {
         jogador.y = 100;
         jogador.width = 32;
         jogador.height = 32;
+        System.out.println(">> Jogador criados");
 
         // Inicializar inimigo
         inimigo = new Rectangle();
@@ -78,6 +99,7 @@ public class FirstScreen implements Screen {
         inimigo.y = 300;
         inimigo.width = 32;
         inimigo.height = 32;
+        System.out.println(">> inimigo criados");
         // Inicializar inimigos
         inimigos = new ArrayList<>();
         for (int i = 0; i < 5; i++) {
@@ -87,6 +109,7 @@ public class FirstScreen implements Screen {
             inimigo.width = 32;
             inimigo.height = 32;
             inimigos.add(inimigo);
+            System.out.println(">> adiciona inimigo criados");
         }
         // Inicializar jogadores
         jogadores = new ArrayList<>();
@@ -97,12 +120,15 @@ public class FirstScreen implements Screen {
             jogador.width = 32;
             jogador.height = 32;
             jogadores.add(jogador);
+            System.out.println(">> Jogador adicionado");
         }
+
         // Inicializar texturas
-        texturas = new ArrayList<>();
+       texturas = new ArrayList<>();
         texturas.add(jogadorTextura);
         texturas.add(inimigoTextura);
         texturas.add(obstaculoTextura);
+        System.out.println(">> texturas iniciadas");
         // Inicializar sons
         sons = new ArrayList<>();
         // Aqui você pode carregar sons, por exemplo:
@@ -120,6 +146,7 @@ public class FirstScreen implements Screen {
             obstaculo.y = 400 - (i / 4) * 150;
             obstaculo.width = 32;
             obstaculo.height = 32;
+            System.out.println(">> Jobtaculo array criado");
             //LIXO try {
             //    obstaculos.wait();
             //} catch (InterruptedException e) {
@@ -133,9 +160,16 @@ public class FirstScreen implements Screen {
     @Override
     public void render(float delta) {
 
-        // Limpar o ecrã
-        Gdx.gl.glClearColor(0.1f, 0.1f, 0.1f, 1);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+          //  Gdx.gl.glClearColor(0, 0, 0, 1);
+         //   Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+        // Renderizar o ecrã
+         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
+         Gdx.gl.glClearColor(0, 0, 0, 1); // Cor de fundo preta
+
+                // Limpar o ecrã
+       // Gdx.gl.glClearColor(0.1f, 0.1f, 0.1f, 1);
+       // Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         // novo Libgdx game site
         imput();
@@ -144,14 +178,16 @@ public class FirstScreen implements Screen {
 
 
         // Atualizar lógica do jogo
-
+        viewport.apply();
+        // Atualizar câmara
 
         camera.update();
         loteDesenho.setProjectionMatrix(camera.combined);
 
-        /*LIXO        loteDesenho.begin();
-
-        // Desenhar jogador e inimigo
+      loteDesenho.begin();
+        loteDesenho.draw(jogadorTextura, 32, 32);
+          // LIXO   nada aqui, já é desenhado dentro do método draw()
+        /* Desenhar jogador e inimigo
         loteDesenho.draw(jogadorTextura, jogador.x, jogador.y);
         loteDesenho.draw(inimigoTextura, inimigo.x, inimigo.y);
 
@@ -159,14 +195,17 @@ public class FirstScreen implements Screen {
         for (Rectangle o : obstaculos) {
             loteDesenho.draw(obstaculoTextura, o.x, o.y);
         }
-
-        loteDesenho.end();      */
+        */
+        // Desenhar inimigos
+        //for (Rectangle i : inimigos) {
+        //    loteDesenho.draw(inimigoTextura, i.x, i.y);
+       // }
+      loteDesenho.end();
     }
 
     private void draw() {
 
         ScreenUtils.clear(com.badlogic.gdx.graphics.Color.BLACK);
-        Viewport viewport = new com.badlogic.gdx.utils.viewport.StretchViewport(800, 600, camera);
         viewport.apply();
         loteDesenho.setProjectionMatrix(viewport.getCamera().combined);
         loteDesenho.begin();
@@ -223,7 +262,6 @@ public class FirstScreen implements Screen {
     @Override
     public void resize(int width, int height) {
         // Resize your screen here. The parameters represent the new window size.
-        Viewport viewport = new com.badlogic.gdx.utils.viewport.StretchViewport(800, 600, camera);
         viewport.update(width, height, true);
     }
 
@@ -260,6 +298,7 @@ public class FirstScreen implements Screen {
         for (Object som : sons) {
             // Assuming som is a Sound object, you would call som.dispose() if it were a Sound
             // som.dispose(); // Uncomment if som is a Sound object
+
 
         }
 
