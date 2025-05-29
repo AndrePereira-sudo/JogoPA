@@ -14,6 +14,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import com.badlogic.gdx.graphics.Color;
 import java.util.ArrayList;
 
+import static com.badlogic.gdx.Input.Keys.G;
 import static com.badlogic.gdx.scenes.scene2d.utils.TiledDrawable.draw;
 import com.badlogic.gdx.math.Rectangle;
 import static javax.print.attribute.standard.MediaSizeName.C;
@@ -133,17 +134,11 @@ public class FirstScreen implements Screen {
         // Inicializar sons
         sons = new ArrayList<>();
         // Aqui você pode carregar sons, por exemplo:
-        //sons.add(Gdx.audio.newSound(Gdx.files.internal("som.mp3")));
+       // sons.add(Gdx.audio.newSound(Gdx.files.internal("som.mp3")));
+       // System.out.println(">> Sons iniciados");
+
 
         //Inicializar obstáculos
-
-// Exemplo de criação de obstáculo
-        /*Rectangle obstaculo = new Rectangle();
-        obstaculo.x = 300;
-        obstaculo.y = 200;
-        obstaculo.width = 32;
-        obstaculo.height = 32;
-        obstaculos.add(obstaculo); */
 
         // Criar obstáculos
         obstaculos = new ArrayList<>();
@@ -161,8 +156,35 @@ public class FirstScreen implements Screen {
             //}
             obstaculos.add(obstaculo);
         }
+//        System.out.println(">> Obstáculos criados");
+
+        // Configurar lote de desenho
+        loteDesenho.setProjectionMatrix(camera.combined);
+        System.out.println(">> Lote de desenho configurado");
+        // Definir cor de fundo
+        Gdx.gl.glClearColor(0, 0, 0, 1); // Cor de fundo preta
+        System.out.println(">> Cor de fundo definida");
+        // Limpar o ecrã
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
+        System.out.println(">> Ecrã limpo");
+        // Configurar a câmara
+        camera.setToOrtho(false, 800, 600);
+        System.out.println(">> Câmara configurada");
+        // Atualizar a câmara
+        camera.update();
+        System.out.println(">> Câmara atualizada");
+        // Configurar a viewport
+        viewport = new StretchViewport(800, 600, camera);
+        System.out.println(">> Viewport configurada");
+        // Aplicar a viewport
+        viewport.apply();
+        System.out.println(">> Viewport aplicada");
+        // Configurar o lote de desenho
+        loteDesenho.setProjectionMatrix(viewport.getCamera().combined);
+        System.out.println(">> Lote de desenho configurado com a câmara da viewport");
 
     }
+// This method is called every frame to render the screen.
 
     @Override
     public void render(float delta) {
@@ -175,8 +197,8 @@ public class FirstScreen implements Screen {
          Gdx.gl.glClearColor(0, 0, 0, 1); // Cor de fundo preta
 
                 // Limpar o ecrã
-       // Gdx.gl.glClearColor(0.1f, 0.1f, 0.1f, 1);
-       // Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        Gdx.gl.glClearColor(0.1f, 0.1f, 0.1f, 1);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         // novo Libgdx game site
         imput();
@@ -193,24 +215,21 @@ public class FirstScreen implements Screen {
 
       loteDesenho.begin();
         loteDesenho.draw(jogadorTextura, 32, 32);
-          // LIXO   nada aqui, já é desenhado dentro do método draw()
-        /* Desenhar jogador e inimigo
-        loteDesenho.draw(jogadorTextura, jogador.x, jogador.y);
-        loteDesenho.draw(inimigoTextura, inimigo.x, inimigo.y);
-
-        // Desenhar obstáculos
-        for (Rectangle o : obstaculos) {
-            loteDesenho.draw(obstaculoTextura, o.x, o.y);
-        }
-        */
-        // Desenhar inimigos
-        //for (Rectangle i : inimigos) {
-        //    loteDesenho.draw(inimigoTextura, i.x, i.y);
-       // }
+       
       loteDesenho.end();
     }
 
     private void draw() {
+// Desenhar o ecrã
+        // Limpar o ecrã
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
+        Gdx.gl.glClearColor(0, 0, 0, 1); // Cor de fundo preta
+        // Limpar o ecrã
+         Gdx.gl.glClearColor(0.1f, 0.1f, 0.1f, 1);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        // Limpar o ecrã
+        // Gdx.gl.glClearColor(0, 0, 0, 1);
+        // Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 
         ScreenUtils.clear(com.badlogic.gdx.graphics.Color.BLACK);
         viewport.apply();
@@ -235,14 +254,6 @@ public class FirstScreen implements Screen {
         for (Rectangle jogador : jogadores) {
             loteDesenho.draw(jogadorTextura, jogador.x, jogador.y, jogador.width, jogador.height);
         }
-        // LIXO   ja feito Desenhar texturas
-        //for (Texture textura : texturas) {
-          //  loteDesenho.draw(textura, 0, 0);
-       // }
-        // Desenhar sons (se necessário, mas geralmente não se desenham sons)
-        // for (Object som : sons) {
-        //     loteDesenho.draw(som, 0, 0);
-        // }
         // Finalizar lote de desenho
 
         loteDesenho.end();
@@ -250,6 +261,23 @@ public class FirstScreen implements Screen {
     }
 
     private void logic() {
+        // Processar lógica do jogo
+        // Aqui você pode implementar a lógica do jogo, como movimentação de inimigos, colisões, etc.
+        // Exemplo: mover o inimigo em direção ao jogador
+        for (Rectangle inimigo : inimigos) {
+            if (inimigo.x < jogador.x) {
+                inimigo.x += 100 * Gdx.graphics.getDeltaTime(); // Mover para a direita
+            } else if (inimigo.x > jogador.x) {
+                inimigo.x -= 100 * Gdx.graphics.getDeltaTime(); // Mover para a esquerda
+            }
+            if (inimigo.y < jogador.y) {
+                inimigo.y += 100 * Gdx.graphics.getDeltaTime(); // Mover para cima
+            } else if (inimigo.y > jogador.y) {
+                inimigo.y -= 100 * Gdx.graphics.getDeltaTime();
+    }
+        }
+        // Verificar colisões com obstáculos
+        checkCollisions();
     }
 
 
@@ -273,7 +301,7 @@ public class FirstScreen implements Screen {
         jogador.y += Math.signum(mousePos.y - jogador.y) * speed;
         }
     }
-    
+
     // Verificar colisões com obstáculos
     // Aqui você pode implementar a lógica de colisão entre o jogador e os obstáculos
     // Por exemplo, se o jogador colidir com um obstáculo, você pode empurrá-lo para trás ou impedir o movimento
@@ -295,42 +323,27 @@ public class FirstScreen implements Screen {
             }
         }
     }
-// Verificar colisões com obstáculos
-    // Aqui você pode implementar a lógica de colisão entre o jogador e os obstáculos
-    // Por exemplo, se o jogador colidir com um obstáculo, você pode empurrá-lo para trás ou impedir o movimento
-     /*   for (Rectangle obstaculo : obstaculos) {
-            if (jogador.overlaps(obstaculo)) {
-                // Resolver colisão (ex: empurrar jogador para trás)
-                if (jogador.x < obstaculo.x) {
-                    jogador.x = obstaculo.x - jogador.width; // Empurrar para a esquerda
-                } else if (jogador.x > obstaculo.x + obstaculo.width) {
-                    jogador.x = obstaculo.x + obstaculo.width; // Empurrar para a direita
-                }
-                if (jogador.y < obstaculo.y) {
-                    jogador.y = obstaculo.y - jogador.height; // Empurrar para cima
-                } else if (jogador.y > obstaculo.y + obstaculo.height) {
-                    jogador.y = obstaculo.y + obstaculo.height; // Empurrar para baixo
-                }
-            }
-        }*/
 
-      //  input();
-
-
-    // Libertar recursos
-    //  jogadorTextura.dispose();
-    //   inimigoTextura.dispose();
-    //   obstaculoTextura.dispose();
-    //  loteDesenho.dispose();
-
-
-    // Draw your screen here. "delta" is the time since last render in seconds.
+    // This method is called when the screen is resized.
 
     @Override
     public void resize(int width, int height) {
         // Resize your screen here. The parameters represent the new window size.
         viewport.update(width, height, true);
+        System.out.println(">> Resize chamado com largura: " + width + " e altura: " + height);
+        // Atualizar a viewport
+        camera.setToOrtho(false, width, height);
+        viewport.update(width, height);
+        System.out.println(">> Viewport atualizada com largura: " + width + " e altura: " + height);
+        // Atualizar a câmara
+        camera.update();
+        System.out.println(">> Câmara atualizada");
+        // Atualizar o lote de desenho
+        loteDesenho.setProjectionMatrix(camera.combined);
+        System.out.println(">> Lote de desenho atualizado");
+
     }
+
 
     @Override
     public void pause() {
@@ -349,8 +362,9 @@ public class FirstScreen implements Screen {
 
     @Override
     public void dispose() {
-        // Destroy screen's assets here.
         // Dispose of textures
+        jogadorTextura.dispose();
+        inimigoTextura.dispose();
         jogadorTextura.dispose();
         inimigoTextura.dispose();
         obstaculoTextura.dispose();
@@ -365,6 +379,7 @@ public class FirstScreen implements Screen {
         for (Object som : sons) {
             // Assuming som is a Sound object, you would call som.dispose() if it were a Sound
             // som.dispose(); // Uncomment if som is a Sound object
+            // If som is not a Sound object, you may need to handle it differently
 
 
         }
