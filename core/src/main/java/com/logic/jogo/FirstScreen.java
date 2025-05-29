@@ -215,7 +215,7 @@ public class FirstScreen implements Screen {
 
       loteDesenho.begin();
         loteDesenho.draw(jogadorTextura, 32, 32);
-       
+
       loteDesenho.end();
     }
 
@@ -329,6 +329,24 @@ public class FirstScreen implements Screen {
     @Override
     public void resize(int width, int height) {
         // Resize your screen here. The parameters represent the new window size.
+        System.out.println(">> Entrou no resize() com largura: " + width + " e altura: " + height);
+        // Limpar o ecrã
+        Gdx.gl.glClearColor(0, 0, 0, 1); // Cor de fundo preta
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
+        // Atualizar a viewport
+        // Atualizar a viewport com a nova largura e altura
+        // viewport.update(width, height, true);
+        viewport = new StretchViewport(width, height, camera);
+        // Aplicar a viewport
+        viewport.apply();
+        // Atualizar a câmara
+        camera.setToOrtho(false, width, height);
+        // Atualizar a câmara com a nova largura e altura
+        camera.update();
+        // Atualizar o lote de desenho
+        loteDesenho.setProjectionMatrix(camera.combined);
+
+
         viewport.update(width, height, true);
         System.out.println(">> Resize chamado com largura: " + width + " e altura: " + height);
         // Atualizar a viewport
