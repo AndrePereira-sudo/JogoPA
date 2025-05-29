@@ -113,6 +113,15 @@ public class FirstScreen implements Screen {
             inimigos.add(inimigo);
             System.out.println(">> adiciona inimigo criados");
         }
+       // Inimigo inimigo = new Inimigo();
+        // Inicializar jogador na classe Jogador
+         Jogador jogador = new Jogador();
+        // Aqui você pode inicializar os jogadores, por exemplo:
+
+
+
+
+        /*
         // Inicializar jogadores
         jogadores = new ArrayList<>();
         for (int i = 0; i < 3; i++) {
@@ -123,7 +132,7 @@ public class FirstScreen implements Screen {
             jogador.height = 32;
             jogadores.add(jogador);
             System.out.println(">> Jogador adicionado");
-        }
+        }*/
 
         // Inicializar texturas
        texturas = new ArrayList<>();
@@ -148,12 +157,7 @@ public class FirstScreen implements Screen {
             obstaculo.y = 400 - (i / 4) * 150;
             obstaculo.width = 32;
             obstaculo.height = 32;
-            System.out.println(">> Jobtaculo array criado");
-            //LIXO try {
-            //    obstaculos.wait();
-            //} catch (InterruptedException e) {
-            //    throw new RuntimeException(e);
-            //}
+            System.out.println(">> obstaculo array criado");
             obstaculos.add(obstaculo);
         }
 //        System.out.println(">> Obstáculos criados");
@@ -222,16 +226,16 @@ public class FirstScreen implements Screen {
     private void draw() {
 // Desenhar o ecrã
         // Limpar o ecrã
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
-        Gdx.gl.glClearColor(0, 0, 0, 1); // Cor de fundo preta
+       // Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
+       // Gdx.gl.glClearColor(0, 0, 0, 1); // Cor de fundo preta
         // Limpar o ecrã
          Gdx.gl.glClearColor(0.1f, 0.1f, 0.1f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         // Limpar o ecrã
         // Gdx.gl.glClearColor(0, 0, 0, 1);
         // Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
-
-        ScreenUtils.clear(com.badlogic.gdx.graphics.Color.BLACK);
+       // ScreenUtils.clear(com.badlogic.gdx.graphics.Color.BLACK);
+        ScreenUtils.clear(Color.BLACK);
         viewport.apply();
         loteDesenho.setProjectionMatrix(viewport.getCamera().combined);
         loteDesenho.begin();
@@ -246,14 +250,17 @@ public class FirstScreen implements Screen {
         for (Rectangle obstaculo : obstaculos) { // Verificar se "obstaculos" está inicializado e não é null
             loteDesenho.draw(obstaculoTextura, obstaculo.x, obstaculo.y, obstaculo.width, obstaculo.height);
         }
-        // Desenhar inimigos
-        for (Rectangle inimigo : inimigos) {
-            loteDesenho.draw(inimigoTextura, inimigo.x, inimigo.y, inimigo.width, inimigo.height);
-        }
+
+        // Desenhar inimigos  cortado 29-05-2025
+       for (Rectangle inimigo : inimigos) {
+         loteDesenho.draw(inimigoTextura, inimigo.x, inimigo.y, inimigo.width, inimigo.height);
+       }
         // Desenhar jogadores
-        for (Rectangle jogador : jogadores) {
-            loteDesenho.draw(jogadorTextura, jogador.x, jogador.y, jogador.width, jogador.height);
-        }
+        //for (Rectangle jogador : jogadores) {
+        //    loteDesenho.draw(jogadorTextura, jogador.x, jogador.y, jogador.width, jogador.height);
+        //}
+
+
         // Finalizar lote de desenho
 
         loteDesenho.end();

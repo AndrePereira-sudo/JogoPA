@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.2" tiledversion="1.3.3" orientation="orthogonal" renderorder="right-down" width="100" height="100" tilewidth="32" tileheight="32" infinite="0" nextlayerid="2" nextobjectid="1">
+  <tileset firstgid="1" name="planeta" tilewidth="32" tileheight="32" spacing="0" margin="0">
+    <image source="../imagens/planeta.png" width="64" height="64"/>
+  </tileset>
+  <layer id="1" name="Camada de Planetas" width="100" height="100">
+    <data>
+      <!-- Exemplo de disposição de planetas -->
+      <tile gid="1" x="5" y="5"/>
+      <tile gid="1" x="10" y="10"/>
+      <tile gid="1" x="15" y="15"/>
+      <tile gid="1" x="20" y="20"/>
+      <tile gid="1" x="25" y="25"/>
+      <tile gid="1" x="30" y="30"/>
+      <tile gid="1" x="35" y="35"/>
+      <tile gid="1" x="40" y="40"/>
+      <tile gid="1" x="45" y="45"/>
+      <tile gid="1" x="50" y="50"/>
+      <tile gid="1" x="55" y="55"/>
+      <tile gid="1" x="60" y="60"/>
+      <tile gid="1" x="65" y="65"/>
+      <tile gid="1" x="70" y="70"/>
+      <tile gid="1" x="75" y="75"/>
+      <tile gid="1" x="80" y="80"/>
+      <tile gid="1" x="85" y="85"/>
+      <tile gid="1" x="90" y="90"/>
+    </data>
+  </layer>
+</map>
