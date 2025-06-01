@@ -103,6 +103,7 @@ public class FirstScreen implements Screen {
         inimigo.height = 32;
         System.out.println(">> inimigo criados");
         // Inicializar inimigos
+        /*
         inimigos = new ArrayList<>();
         for (int i = 0; i < 5; i++) {
             Rectangle inimigo = new Rectangle();
@@ -113,7 +114,9 @@ public class FirstScreen implements Screen {
             inimigos.add(inimigo);
             System.out.println(">> adiciona inimigo criados");
         }
-       // Inimigo inimigo = new Inimigo();
+        */
+        inimigos = Inimigo.criarInimigos();
+//        Inimigo inimigo = new Inimigo();
         // Inicializar jogador na classe Jogador
          Jogador jogador = new Jogador();
         // Aqui você pode inicializar os jogadores, por exemplo:
