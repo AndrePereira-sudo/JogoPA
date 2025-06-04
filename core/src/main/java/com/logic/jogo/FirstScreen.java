@@ -45,7 +45,7 @@ public class FirstScreen implements Screen {
     ArrayList<Texture> texturas;
     // Array de sons
     ArrayList<Sound> sons;
-         private Sound somColisao;
+    private Sound somColisao;
 
 
     // This is the main method of the application. It is called when the application is launched.
@@ -143,7 +143,7 @@ public class FirstScreen implements Screen {
         // Inicializar sons
         sons = new ArrayList<>();
         // Aqui você pode carregar sons, por exemplo:
-       // sons.add(Gdx.audio.newSound(Gdx.files.internal("som.mp3")));
+       sons.add(Gdx.audio.newSound(Gdx.files.internal("laser.mp3")));
        // System.out.println(">> Sons iniciados");
         Sound somColisao = Gdx.audio.newSound(Gdx.files.internal("Colisao.mp3"));
         sons = new ArrayList<>();
