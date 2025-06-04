@@ -3,6 +3,7 @@ package com.logic.jogo;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -18,7 +19,8 @@ import static com.badlogic.gdx.Input.Keys.G;
 import static com.badlogic.gdx.scenes.scene2d.utils.TiledDrawable.draw;
 import com.badlogic.gdx.math.Rectangle;
 import static javax.print.attribute.standard.MediaSizeName.C;
-
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 /** First screen of the application. Displayed after the application is created. */
 public class FirstScreen implements Screen {
     SpriteBatch loteDesenho;
@@ -42,7 +44,8 @@ public class FirstScreen implements Screen {
     // Array de texturas
     ArrayList<Texture> texturas;
     // Array de sons
-    ArrayList<Object> sons;
+    ArrayList<Sound> sons;
+         private Sound somColisao;
 
 
     // This is the main method of the application. It is called when the application is launched.
@@ -142,7 +145,10 @@ public class FirstScreen implements Screen {
         // Aqui você pode carregar sons, por exemplo:
        // sons.add(Gdx.audio.newSound(Gdx.files.internal("som.mp3")));
        // System.out.println(">> Sons iniciados");
-
+        Sound somColisao = Gdx.audio.newSound(Gdx.files.internal("Colisao.mp3"));
+        sons = new ArrayList<>();
+        sons.add(somColisao);
+        System.out.println(">> Som de colisão carregado");
 
         //Inicializar obstáculos
         // Criar obstáculos
@@ -309,6 +315,9 @@ public class FirstScreen implements Screen {
     // Aqui você pode implementar a lógica de colisão entre o jogador e os obstáculos
     // Por exemplo, se o jogador colidir com um obstáculo, você pode empurrá-lo para trás ou impedir o movimento
     private void checkCollisions() {
+
+        sons.get(0).play();
+        somColisao.play();
         for (Rectangle obstaculo : obstaculos) {
             if (jogador.overlaps(obstaculo)) {
                 // Resolver colisão (ex: empurrar jogador para trás)
