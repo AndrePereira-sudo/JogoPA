@@ -316,8 +316,9 @@ public class FirstScreen implements Screen {
     // Por exemplo, se o jogador colidir com um obstáculo, você pode empurrá-lo para trás ou impedir o movimento
     private void checkCollisions() {
 
-        sons.get(0).play();
-        somColisao.play();
+        long play = sons.get(0).play();
+       // somColisao.play();
+
         for (Rectangle obstaculo : obstaculos) {
             if (jogador.overlaps(obstaculo)) {
                 // Resolver colisão (ex: empurrar jogador para trás)
@@ -403,7 +404,8 @@ public class FirstScreen implements Screen {
             textura.dispose();
         }
         // Dispose of sounds if necessary
-        for (Object som : sons) {
+        for (Sound som : sons) {
+            som.dispose();
             // If som is a Sound object, you would call som.dispose() if it were a Sound
             // If som is not a Sound object, you may need to handle it differently
             // Example: if som is a Sound object, you would call som.dispose()

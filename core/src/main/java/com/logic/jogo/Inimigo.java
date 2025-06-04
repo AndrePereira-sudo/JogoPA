@@ -18,16 +18,7 @@ public class Inimigo {
         return inimigos;
     }
 }
-
-
-
-
-/*  package com.logic.jogo;
-
-import com.badlogic.gdx.math.Rectangle;
-
-import java.util.ArrayList;
-
+/*
 public class Inimigo {
     // Inicializar inimigos
     private ArrayList<Rectangle> inimigos = new ArrayList<>();
@@ -43,6 +34,7 @@ public class Inimigo {
             System.out.println(">> adiciona inimigo criados");
         }
     }
+}
 
 /*
     public Jogador() {
