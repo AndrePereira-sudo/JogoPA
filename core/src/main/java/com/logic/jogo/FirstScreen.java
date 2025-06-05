@@ -46,15 +46,19 @@ public class FirstScreen implements Screen {
     // Array de sons
     ArrayList<Sound> sons;
     private Sound somColisao;
-
+    private Music musicaFundo;
 
     // This is the main method of the application. It is called when the application is launched.
     // You can initialize your application here.
 
-
     // This is the constructor of the screen. You can initialize your screen here.
     @Override
     public void show() {
+        musicaFundo = Gdx.audio.newMusic(Gdx.files.internal("laser.mp3")); // Substitua pelo nome do seu arquivo
+        musicaFundo.setLooping(true); // Para tocar continuamente
+        musicaFundo.setVolume(0.5f); // Volume entre 0.0 e 1.0
+        musicaFundo.play();
+
         // Prepare your screen here.
         // Inicializar lote de desenho
         loteDesenho = new SpriteBatch();
