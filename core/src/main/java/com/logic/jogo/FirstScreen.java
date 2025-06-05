@@ -148,9 +148,10 @@ public class FirstScreen implements Screen {
         sons = new ArrayList<>();
         // Aqui você pode carregar sons, por exemplo:
        sons.add(Gdx.audio.newSound(Gdx.files.internal("laser.mp3")));
-       // System.out.println(">> Sons iniciados");
-        Sound somColisao = Gdx.audio.newSound(Gdx.files.internal("Colisao.mp3"));
-        sons = new ArrayList<>();
+       // Sound somColisao = Gdx.audio.newSound(Gdx.files.internal("Colisao.mp3"));
+       // sons = new ArrayList<>();
+       // sons.add(somColisao);
+        somColisao = Gdx.audio.newSound(Gdx.files.internal("Colisao.mp3"));
         sons.add(somColisao);
         System.out.println(">> Som de colisão carregado");
 
@@ -319,7 +320,7 @@ public class FirstScreen implements Screen {
     // Aqui você pode implementar a lógica de colisão entre o jogador e os obstáculos
     // Por exemplo, se o jogador colidir com um obstáculo, você pode empurrá-lo para trás ou impedir o movimento
     private void checkCollisions() {
-
+        somColisao.play();
         long play = sons.get(0).play();
        // somColisao.play();
 
@@ -394,6 +395,7 @@ public class FirstScreen implements Screen {
 
     @Override
     public void dispose() {
+
         // Dispose of textures
         jogadorTextura.dispose();
         inimigoTextura.dispose();
@@ -423,22 +425,8 @@ public class FirstScreen implements Screen {
             } else if (som instanceof com.badlogic.gdx.audio.Music) {
                 ((com.badlogic.gdx.audio.Music) som).dispose();
             }
-            // If som is a Sound object, you would call som.dispose() if it were a Sound
-            // If som is not a Sound object, you may need to handle it differently
-            // Example: if som is a Sound object, you would call som.dispose()
-            // if (som instanceof Sound) {
-            //     ((Sound) som).dispose();
-            // }
-            // If som is a Sound object, you would call som.dispose() if it were a Sound
-            // if (som instanceof com.badlogic.gdx.audio.Sound) {
-            //     ((com.badlogic.gdx.audio.Sound) som).dispose();
-            // } else if (som instanceof com.badlogic.gdx.audio.Music) {
-            //     ((com.badlogic.gdx.audio.Music) som).dispose();
-            // }
-
-            // Assuming som is a Sound object, you would call som.dispose() if it were a Sound
-            // som.dispose(); // Uncomment if som is a Sound object
-            // If som is not a Sound object, you may need to handle it differently
+            if (musicaFundo != null) musicaFundo.dispose();
+            if (somColisao != null) somColisao.dispose();
 
         }
 
