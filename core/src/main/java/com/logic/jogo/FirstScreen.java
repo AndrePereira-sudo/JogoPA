@@ -23,6 +23,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 /** First screen of the application. Displayed after the application is created. */
 public class FirstScreen implements Screen {
+
     SpriteBatch loteDesenho;
 
     // Carregar texturas
@@ -30,11 +31,16 @@ public class FirstScreen implements Screen {
     Texture inimigoTextura;
     Texture obstaculoTextura;
     Texture backgroundTexture;
+
+    // Declare camera and viewport
     OrthographicCamera camera;
     Viewport viewport;
+
+    // Declare jogador, inimigo, obstáculo e outros objetos do jogo
     Rectangle jogador;
     Rectangle inimigo;
     Rectangle obstaculo;
+
     // Array de obstáculos
     ArrayList<Rectangle> obstaculos;
     // Array de inimigos
@@ -45,54 +51,41 @@ public class FirstScreen implements Screen {
     ArrayList<Texture> texturas;
     // Array de sons
     ArrayList<Sound> sons;
+
+    // Declare som de colisão e música de fundo
     private Sound somColisao;
     private Music musicaFundo;
 
-    // This is the main method of the application. It is called when the application is launched.
-    // You can initialize your application here.
 
     // This is the constructor of the screen. You can initialize your screen here.
     @Override
     public void show() {
-        musicaFundo = Gdx.audio.newMusic(Gdx.files.internal("musica_fundo.mp3")); // Substitua pelo nome do seu arquivo
-        musicaFundo.setLooping(true); // Para tocar continuamente
-        musicaFundo.setVolume(0.5f); // Volume entre 0.0 e 1.0
-        musicaFundo.play();
 
-        // Prepare your screen here.
-        // Inicializar lote de desenho
+         // Inicializar lote de desenho
         loteDesenho = new SpriteBatch();
 
         // Criar câmara ortográfica
         camera = new OrthographicCamera();
         camera.setToOrtho(false, 800, 600);
 
-        viewport = new StretchViewport(800, 600, camera);
-        viewport.apply();
+        // Configurar a viewport
+        viewport = new StretchViewport(800, 600, camera);// Definir a largura e altura da viewport
+        viewport.apply();// Aplicar a viewport
 
         // Inicializar texturas
-        // texturas = new ArrayList<>();
         // Carregar texturas
-        // Certifique-se de que as texturas estão no diretório correto
-        // Gdx.files.internal("caminho/para/sua/textura.png")
-        // Aqui você pode carregar as texturas necessárias
-        // Exemplo de carregamento de texturas
-
-
         jogadorTextura = new Texture("jogador.png");
         inimigoTextura = new Texture("inimigo.png");
-        obstaculoTextura = new Texture("obstaculo.png");
+        obstaculoTextura = new Texture("planeta64.png");
         backgroundTexture = new Texture("background.png");
 
-        // For example, you can set up your game objects, load assets, etc.
-
         // Inicializar jogador
-        jogador = new Rectangle();
+        jogador = new Rectangle();// Criar um novo retângulo para o jogador
         jogador.x = 10;
         jogador.y = 10;
         jogador.width = 32;
         jogador.height = 32;
-
+        jogador = Jogador.criarJogador();// Chamar o método estático para criar o jogador
 
         // Inicializar inimigo
         inimigo = new Rectangle();
@@ -100,70 +93,37 @@ public class FirstScreen implements Screen {
         inimigo.y = 300;
         inimigo.width = 32;
         inimigo.height = 32;
-
-        // Inicializar inimigos
-        /*
-        inimigos = new ArrayList<>();
-        for (int i = 0; i < 5; i++) {
-            Rectangle inimigo = new Rectangle();
-            inimigo.x = 200 + i * 100;
-            inimigo.y = 200 + i * 50;
-            inimigo.width = 32;
-            inimigo.height = 32;
-            inimigos.add(inimigo);
-            System.out.println(">> adiciona inimigo criados");
-        }
-        */
-
         inimigos = Inimigo.criarInimigos();
-//        Inimigo inimigo = new Inimigo();
-        // Inicializar jogador na classe Jogador
-        jogador = Jogador.criarJogador();
-       //  Jogador jogador = new Jogador();
-        // Aqui você pode inicializar os jogadores, por exemplo:
-
-
-
-
-        /*
-        // Inicializar jogadores
-        jogadores = new ArrayList<>();
-        for (int i = 0; i < 3; i++) {
-            Rectangle jogador = new Rectangle();
-            jogador.x = 50 + i * 100;
-            jogador.y = 50 + i * 50;
-            jogador.width = 32;
-            jogador.height = 32;
-            jogadores.add(jogador);
-            System.out.println(">> Jogador adicionado");
-        }*/
 
         // Inicializar texturas
-       texturas = new ArrayList<>();
-        texturas.add(jogadorTextura);
-        texturas.add(inimigoTextura);
-        texturas.add(obstaculoTextura);
+        texturas = new ArrayList<>();
+        texturas.add(jogadorTextura);// Adicionar textura do jogador
+        texturas.add(inimigoTextura);// Adicionar textura do inimigo
+        texturas.add(obstaculoTextura);// Adicionar textura do obstáculo
 
         // Inicializar sons
+        // Carregar sons
+        musicaFundo = Gdx.audio.newMusic(Gdx.files.internal("musica_fundo.mp3")); // Substitua pelo nome do seu arquivo
+        musicaFundo.setLooping(true); // Para tocar continuamente
+        musicaFundo.setVolume(0.5f); // Volume entre 0.0 e 1.0
+        musicaFundo.play();
+
         sons = new ArrayList<>();
-        // Aqui você pode carregar sons, por exemplo:
-       sons.add(Gdx.audio.newSound(Gdx.files.internal("laser.mp3")));
-       // Sound somColisao = Gdx.audio.newSound(Gdx.files.internal("Colisao.mp3"));
-       // sons = new ArrayList<>();
-       // sons.add(somColisao);
+
+        sons.add(Gdx.audio.newSound(Gdx.files.internal("laser.mp3")));
+
         somColisao = Gdx.audio.newSound(Gdx.files.internal("Colisao.mp3"));
         sons.add(somColisao);
-        System.out.println(">> Som de colisão carregado");
 
         //Inicializar obstáculos
         // Criar obstáculos
         obstaculos = new ArrayList<>();
         for (int i = 0; i < 8; i++) {
             Rectangle obstaculo = new Rectangle();
-            obstaculo.x = 50 + (i % 4) * 150;
-            obstaculo.y = 400 - (i / 4) * 150;
-            obstaculo.width = 32;
-            obstaculo.height = 32;
+            obstaculo.x = 50 + (i % 4) * 150;// Posição X do obstáculo
+            obstaculo.y = 400 - (i / 4) * 150;// Posição Y do obstáculo
+            obstaculo.width = 64; // Largura do obstáculo
+            obstaculo.height = 64;// Altura do obstáculo
             obstaculos.add(obstaculo);
         }
 
@@ -223,7 +183,7 @@ public class FirstScreen implements Screen {
       loteDesenho.setProjectionMatrix(camera.combined);
 
       loteDesenho.begin();
-      loteDesenho.draw(jogadorTextura, 32, 32);
+      //loteDesenho.draw(jogadorTextura, 32, 32);
 
       loteDesenho.end();
     }
@@ -231,14 +191,11 @@ public class FirstScreen implements Screen {
     private void draw() {
 // Desenhar o ecrã
         // Limpar o ecrã
-       // Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
        // Gdx.gl.glClearColor(0, 0, 0, 1); // Cor de fundo preta
         // Limpar o ecrã
         Gdx.gl.glClearColor(0.1f, 0.1f, 0.1f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        // Limpar o ecrã
-        // Gdx.gl.glClearColor(0, 0, 0, 1);
-        // Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
        // ScreenUtils.clear(com.badlogic.gdx.graphics.Color.BLACK);
 
         // Aplicar a viewport
@@ -258,16 +215,10 @@ public class FirstScreen implements Screen {
             loteDesenho.draw(obstaculoTextura, obstaculo.x, obstaculo.y, obstaculo.width, obstaculo.height);
         }
 
-        // Desenhar inimigos  cortado 29-05-2025
-       for (Rectangle inimigo : inimigos) {
+        // Desenhar inimigos
+        for (Rectangle inimigo : inimigos) {
          loteDesenho.draw(inimigoTextura, inimigo.x, inimigo.y, inimigo.width, inimigo.height);
-       }
-        // Desenhar jogadores
-        //for (Rectangle jogador : jogadores) {
-            //loteDesenho.draw(jogadorTextura, jogador.x, jogador.y, jogador.width, jogador.height);
-        //}
-
-
+        }
 
         // Finalizar lote de desenho
         loteDesenho.end();
@@ -293,7 +244,6 @@ public class FirstScreen implements Screen {
         // Verificar colisões com obstáculos
         checkCollisions();
     }
-
 
     private void imput() {
         // Processar entrada do jogador
@@ -429,7 +379,6 @@ public class FirstScreen implements Screen {
             if (somColisao != null) somColisao.dispose();
 
         }
-
 
     }
 
