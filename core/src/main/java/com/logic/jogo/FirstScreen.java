@@ -3,6 +3,7 @@ package com.logic.jogo;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -18,7 +19,8 @@ import static com.badlogic.gdx.Input.Keys.G;
 import static com.badlogic.gdx.scenes.scene2d.utils.TiledDrawable.draw;
 import com.badlogic.gdx.math.Rectangle;
 import static javax.print.attribute.standard.MediaSizeName.C;
-
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 /** First screen of the application. Displayed after the application is created. */
 public class FirstScreen implements Screen {
     SpriteBatch loteDesenho;
@@ -42,16 +44,21 @@ public class FirstScreen implements Screen {
     // Array de texturas
     ArrayList<Texture> texturas;
     // Array de sons
-    ArrayList<Object> sons;
-
+    ArrayList<Sound> sons;
+    private Sound somColisao;
+    private Music musicaFundo;
 
     // This is the main method of the application. It is called when the application is launched.
     // You can initialize your application here.
 
-
     // This is the constructor of the screen. You can initialize your screen here.
     @Override
     public void show() {
+        musicaFundo = Gdx.audio.newMusic(Gdx.files.internal("musica_fundo.mp3")); // Substitua pelo nome do seu arquivo
+        musicaFundo.setLooping(true); // Para tocar continuamente
+        musicaFundo.setVolume(0.5f); // Volume entre 0.0 e 1.0
+        musicaFundo.play();
+
         // Prepare your screen here.
         // Inicializar lote de desenho
         loteDesenho = new SpriteBatch();
@@ -140,9 +147,13 @@ public class FirstScreen implements Screen {
         // Inicializar sons
         sons = new ArrayList<>();
         // Aqui você pode carregar sons, por exemplo:
-       // sons.add(Gdx.audio.newSound(Gdx.files.internal("som.mp3")));
-       // System.out.println(">> Sons iniciados");
-
+       sons.add(Gdx.audio.newSound(Gdx.files.internal("laser.mp3")));
+       // Sound somColisao = Gdx.audio.newSound(Gdx.files.internal("Colisao.mp3"));
+       // sons = new ArrayList<>();
+       // sons.add(somColisao);
+        somColisao = Gdx.audio.newSound(Gdx.files.internal("Colisao.mp3"));
+        sons.add(somColisao);
+        System.out.println(">> Som de colisão carregado");
 
         //Inicializar obstáculos
         // Criar obstáculos
@@ -309,6 +320,10 @@ public class FirstScreen implements Screen {
     // Aqui você pode implementar a lógica de colisão entre o jogador e os obstáculos
     // Por exemplo, se o jogador colidir com um obstáculo, você pode empurrá-lo para trás ou impedir o movimento
     private void checkCollisions() {
+        somColisao.play();
+        long play = sons.get(0).play();
+       // somColisao.play();
+
         for (Rectangle obstaculo : obstaculos) {
             if (jogador.overlaps(obstaculo)) {
                 // Resolver colisão (ex: empurrar jogador para trás)
@@ -380,6 +395,7 @@ public class FirstScreen implements Screen {
 
     @Override
     public void dispose() {
+
         // Dispose of textures
         jogadorTextura.dispose();
         inimigoTextura.dispose();
@@ -394,7 +410,8 @@ public class FirstScreen implements Screen {
             textura.dispose();
         }
         // Dispose of sounds if necessary
-        for (Object som : sons) {
+        for (Sound som : sons) {
+            som.dispose();
             // If som is a Sound object, you would call som.dispose() if it were a Sound
             // If som is not a Sound object, you may need to handle it differently
             // Example: if som is a Sound object, you would call som.dispose()
@@ -408,22 +425,8 @@ public class FirstScreen implements Screen {
             } else if (som instanceof com.badlogic.gdx.audio.Music) {
                 ((com.badlogic.gdx.audio.Music) som).dispose();
             }
-            // If som is a Sound object, you would call som.dispose() if it were a Sound
-            // If som is not a Sound object, you may need to handle it differently
-            // Example: if som is a Sound object, you would call som.dispose()
-            // if (som instanceof Sound) {
-            //     ((Sound) som).dispose();
-            // }
-            // If som is a Sound object, you would call som.dispose() if it were a Sound
-            // if (som instanceof com.badlogic.gdx.audio.Sound) {
-            //     ((com.badlogic.gdx.audio.Sound) som).dispose();
-            // } else if (som instanceof com.badlogic.gdx.audio.Music) {
-            //     ((com.badlogic.gdx.audio.Music) som).dispose();
-            // }
-
-            // Assuming som is a Sound object, you would call som.dispose() if it were a Sound
-            // som.dispose(); // Uncomment if som is a Sound object
-            // If som is not a Sound object, you may need to handle it differently
+            if (musicaFundo != null) musicaFundo.dispose();
+            if (somColisao != null) somColisao.dispose();
 
         }
 
