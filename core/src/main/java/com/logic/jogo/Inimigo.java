@@ -13,8 +13,7 @@ public class Inimigo {
             inimigo.width = 32;
             inimigo.height = 32;
             inimigos.add(inimigo);
-            System.out.println(">> Inimigo " + i + " criado");
-        }
+            }
         return inimigos;
     }
 }

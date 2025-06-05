@@ -9,7 +9,6 @@ public class Jogador {
         jogador.y = 10;
         jogador.width = 32;
         jogador.height = 32;
-        System.out.println(">> Jogador criado");
         return jogador;
     }
 }
