@@ -264,11 +264,14 @@ public class FirstScreen implements Screen {
         jogador.x += Math.signum(mousePos.x - jogador.x) * speed;
         jogador.y += Math.signum(mousePos.y - jogador.y) * speed;
         }
+        jogador.x = Math.max(0, Math.min(jogador.x, viewport.getWorldWidth() - jogador.width));
+        jogador.y = Math.max(0, Math.min(jogador.y, viewport.getWorldHeight() - jogador.height));
     }
 
     // Verificar colisões com obstáculos
     // Aqui você pode implementar a lógica de colisão entre o jogador e os obstáculos
     // Por exemplo, se o jogador colidir com um obstáculo, você pode empurrá-lo para trás ou impedir o movimento
+    /*
     private void checkCollisions() {
         somColisao.play();
         long play = sons.get(0).play();
@@ -293,7 +296,42 @@ public class FirstScreen implements Screen {
     }
 
     // This method is called when the screen is resized.
+*/
+    private void checkCollisions() {
+        boolean houveColisao = false;
 
+        for (Rectangle obstaculo : obstaculos) {
+            if (jogador.overlaps(obstaculo)) {
+                // Parar a música de fundo
+                if (musicaFundo.isPlaying()) {
+                    musicaFundo.pause();
+                }
+
+                // Tocar som de colisão
+                somColisao.play();
+
+                // Resolver colisão (empurrar o jogador para trás)
+                if (jogador.x < obstaculo.x) {
+                    jogador.x = obstaculo.x - jogador.width;
+                } else if (jogador.x > obstaculo.x + obstaculo.width) {
+                    jogador.x = obstaculo.x + obstaculo.width;
+                }
+
+                if (jogador.y < obstaculo.y) {
+                    jogador.y = obstaculo.y - jogador.height;
+                } else if (jogador.y > obstaculo.y + obstaculo.height) {
+                    jogador.y = obstaculo.y + obstaculo.height;
+                }
+
+                houveColisao = true;
+            }
+        }
+
+        // Retomar a música de fundo se não houve colisão
+        if (!houveColisao && !musicaFundo.isPlaying()) {
+            musicaFundo.play();
+        }
+    }
     @Override
     public void resize(int width, int height) {
         // Resize your screen here. The parameters represent the new window size.
