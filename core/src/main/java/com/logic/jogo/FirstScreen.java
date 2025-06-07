@@ -1,5 +1,4 @@
 package com.logic.jogo;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
@@ -16,12 +15,8 @@ import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.badlogic.gdx.graphics.Color;
 import java.util.ArrayList;
-import static com.badlogic.gdx.Input.Keys.G;
-import static com.badlogic.gdx.scenes.scene2d.utils.TiledDrawable.draw;
 import com.badlogic.gdx.math.Rectangle;
-import static javax.print.attribute.standard.MediaSizeName.C;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.audio.Sound;
+
 /** First screen of the application. Displayed after the application is created. */
 public class FirstScreen implements Screen {
 
@@ -41,8 +36,7 @@ public class FirstScreen implements Screen {
     // Declare jogador, inimigo, obstáculo e outros objetos do jogo
     Rectangle jogador;
     Rectangle inimigo;
-    Rectangle obstaculo;
-    //ArrayList<Rectangle> portal;
+
     // Array de obstáculos
     ArrayList<Rectangle> obstaculos;
     // Array de inimigos
@@ -80,13 +74,12 @@ public class FirstScreen implements Screen {
         inimigoTextura = new Texture("inimigo.png");
         obstaculoTextura = new Texture("planeta64.png");
         backgroundTexture = new Texture("background.png");
-// Carregar textura do portal
-        portalTextura = new Texture("portal.png"); // certifique-se de que este arquivo está na pasta assets
+        portalTextura = new Texture("portal.png"); // carregar textuta do portal
 
 // Criar retângulo do portal
         portal = new Rectangle();
-        portal.x = 250;
-        portal.y = 100;
+        portal.x = 580;
+        portal.y = 350;
         portal.width = 48;
         portal.height = 48;
 
@@ -100,8 +93,8 @@ public class FirstScreen implements Screen {
 
         // Inicializar inimigo
         inimigo = new Rectangle();
-        inimigo.x = 500;
-        inimigo.y = 300;
+        inimigo.x = 600;
+        inimigo.y = 10;
         inimigo.width = 32;
         inimigo.height = 32;
         inimigos = Inimigo.criarInimigos();
@@ -171,13 +164,7 @@ public class FirstScreen implements Screen {
     @Override
     public void render(float delta) {
 
-        //   Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
-        // Renderizar o ecrã
-         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
-         Gdx.gl.glClearColor(0, 0, 0, 1); // Cor de fundo preta
-
-                // Limpar o ecrã
+        // Limpar o ecrã
         Gdx.gl.glClearColor(0.1f, 0.1f, 0.1f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
@@ -209,11 +196,10 @@ public class FirstScreen implements Screen {
 // Desenhar o ecrã
          // Limpar o ecrã
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
-       // Gdx.gl.glClearColor(0, 0, 0, 1); // Cor de fundo preta
+
         // Limpar o ecrã
         Gdx.gl.glClearColor(0.1f, 0.1f, 0.1f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-       // ScreenUtils.clear(com.badlogic.gdx.graphics.Color.BLACK);
 
         // Aplicar a viewport
         ScreenUtils.clear(Color.BLACK);
@@ -237,9 +223,9 @@ public class FirstScreen implements Screen {
          loteDesenho.draw(inimigoTextura, inimigo.x, inimigo.y, inimigo.width, inimigo.height);
         }
 // Desenhar o portal
-        for (int i = 0; i < 2; i++) {
+        //for (int i = 0; i < 2; i++) {
             loteDesenho.draw(portalTextura, portal.x, portal.y, portal.width, portal.height);
-        }
+        //}
         // Finalizar lote de desenho
         loteDesenho.end();
 
@@ -266,8 +252,8 @@ public class FirstScreen implements Screen {
         // Verificar se jogador entrou no portal
         if (jogador.overlaps(portal)) {
             musicaFundo.stop(); // parar música ao mudar de ecrã (opcional)
-           ((Principal) Gdx.app.getApplicationListener()).setScreen(new SecondScreen());
-
+            ((Principal) Gdx.app.getApplicationListener()).setScreen(new SecondScreen());
+           // ((Principal) Gdx.app.getApplicationListener()).setScreen(new SecondScreen(jogador.x, jogador.y));
         }
     }
 
@@ -295,34 +281,9 @@ public class FirstScreen implements Screen {
     }
 
     // Verificar colisões com obstáculos
-    // Aqui você pode implementar a lógica de colisão entre o jogador e os obstáculos
-    // Por exemplo, se o jogador colidir com um obstáculo, você pode empurrá-lo para trás ou impedir o movimento
-    /*
-    private void checkCollisions() {
-        somColisao.play();
-        long play = sons.get(0).play();
-       // somColisao.play();
+    // Aqui implementar a lógica de colisão entre o jogador e os obstáculos
+    // se o jogador colidir com um obstáculo, pode empurrá-lo para trás ou impedir o movimentoized.
 
-        for (Rectangle obstaculo : obstaculos) {
-            if (jogador.overlaps(obstaculo)) {
-                // Resolver colisão (ex: empurrar jogador para trás)
-                if (jogador.x < obstaculo.x) {
-                    jogador.x = obstaculo.x - jogador.width; // Empurrar para a esquerda
-                } else if (jogador.x > obstaculo.x + obstaculo.width) {
-                    jogador.x = obstaculo.x + obstaculo.width; // Empurrar para a direita
-                }
-                if (jogador.y < obstaculo.y) {
-                    jogador.y = obstaculo.y - jogador.height; // Empurrar para cima
-                } else if (jogador.y > obstaculo.y + obstaculo.height) {
-                    jogador.y = obstaculo.y + obstaculo.height; // Empurrar para baixo
-                }
-
-            }
-        }
-    }
-
-    // This method is called when the screen is resized.
-*/
     private void checkCollisions() {
         boolean houveColisao = false;
 

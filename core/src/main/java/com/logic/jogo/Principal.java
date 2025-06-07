@@ -9,12 +9,8 @@ public class Principal extends Game {
     public void create() { // Metodo da aplicação, é chamado quando a aplicação é iniciada.
                 // Initialize the game and set the first screen
 
-
         setScreen(new FirstScreen());
 
     }
 
-    public void setScreen(SecondScreen secondScreen) {
-
-    }
 }

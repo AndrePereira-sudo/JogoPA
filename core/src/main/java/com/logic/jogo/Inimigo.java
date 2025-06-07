@@ -1,11 +1,9 @@
 package com.logic.jogo;
-
 import com.badlogic.gdx.math.Rectangle;
 import java.util.ArrayList;
 
 public class Inimigo {
     // Inicializar inimigos
-    private ArrayList<Rectangle> inimigos = new ArrayList<>();
 
        public static ArrayList<Rectangle> criarInimigos() {
         ArrayList<Rectangle> inimigos = new ArrayList<>();
