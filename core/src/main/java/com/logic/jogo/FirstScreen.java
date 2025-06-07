@@ -35,6 +35,8 @@ public class FirstScreen implements Screen {
     // Declare camera and viewport
     OrthographicCamera camera;
     Viewport viewport;
+    Texture portalTextura;
+    Rectangle portal;
 
     // Declare jogador, inimigo, obstáculo e outros objetos do jogo
     Rectangle jogador;
@@ -78,6 +80,15 @@ public class FirstScreen implements Screen {
         inimigoTextura = new Texture("inimigo.png");
         obstaculoTextura = new Texture("planeta64.png");
         backgroundTexture = new Texture("background.png");
+// Carregar textura do portal
+        portalTextura = new Texture("portal.png"); // certifique-se de que este arquivo está na pasta assets
+
+// Criar retângulo do portal
+        portal = new Rectangle();
+        portal.x = 700;
+        portal.y = 500;
+        portal.width = 48;
+        portal.height = 48;
 
         // Inicializar jogador
         jogador = new Rectangle();// Criar um novo retângulo para o jogador
@@ -219,6 +230,8 @@ public class FirstScreen implements Screen {
         for (Rectangle inimigo : inimigos) {
          loteDesenho.draw(inimigoTextura, inimigo.x, inimigo.y, inimigo.width, inimigo.height);
         }
+// Desenhar o portal
+        loteDesenho.draw(portalTextura, portal.x, portal.y, portal.width, portal.height);
 
         // Finalizar lote de desenho
         loteDesenho.end();
@@ -243,6 +256,12 @@ public class FirstScreen implements Screen {
         }
         // Verificar colisões com obstáculos
         checkCollisions();
+        // Verificar se jogador entrou no portal
+        if (jogador.overlaps(portal)) {
+            musicaFundo.stop(); // parar música ao mudar de ecrã (opcional)
+          //  ((Principal) Gdx.app.getApplicationListener()).setScreen(new SecondScreen());
+
+        }
     }
 
     private void imput() {
@@ -391,6 +410,7 @@ public class FirstScreen implements Screen {
         inimigoTextura.dispose();
         obstaculoTextura.dispose();
         backgroundTexture.dispose();
+        portalTextura.dispose();
         // Dispose of sprite batch
         loteDesenho.dispose();
         // Dispose of other resources if necessary
