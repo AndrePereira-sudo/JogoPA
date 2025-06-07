@@ -245,8 +245,8 @@ public class FirstScreen implements Screen {
         // Verificar se jogador entrou no portal
         if (jogador.overlaps(portal)) {
             musicaFundo.stop(); // parar música ao mudar de ecrã (opcional)
-           ((Principal) Gdx.app.getApplicationListener()).setScreen(new SecondScreen());
-
+            ((Principal) Gdx.app.getApplicationListener()).setScreen(new SecondScreen());
+           // ((Principal) Gdx.app.getApplicationListener()).setScreen(new SecondScreen(jogador.x, jogador.y));
         }
     }
 

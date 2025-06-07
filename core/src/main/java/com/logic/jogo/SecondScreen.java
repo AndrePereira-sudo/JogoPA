@@ -14,6 +14,7 @@ public class SecondScreen implements Screen {
     // Texture background;
     private SpriteBatch batch;
     private Texture background;
+
     @Override
     public void show() {
         batch   = new SpriteBatch();
@@ -31,6 +32,7 @@ public class SecondScreen implements Screen {
             batch.begin();
         // Desenhar o fundo da nova dimensão
        batch.draw(background, 0, 0);
+
         batch.end();
     }
 
