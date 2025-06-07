@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
@@ -162,6 +163,7 @@ public class FirstScreen implements Screen {
         // Configurar o lote de desenho
         loteDesenho.setProjectionMatrix(viewport.getCamera().combined);
         System.out.println(">> Lote de desenho configurado com a câmara da viewport");
+        tiros = new Array<>();
 
     }
 // This method is called every frame to render the screen.
@@ -196,11 +198,16 @@ public class FirstScreen implements Screen {
       //loteDesenho.draw(jogadorTextura, 32, 32);
 
       loteDesenho.end();
+        if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
+            Tiro novoTiro = new Tiro(jogador.x + jogador.width / 2, jogador.y + jogador.height / 2);
+            tiros.add(novoTiro);
+        }
+
     }
 
     private void draw() {
 // Desenhar o ecrã
-        // Limpar o ecrã
+         // Limpar o ecrã
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
        // Gdx.gl.glClearColor(0, 0, 0, 1); // Cor de fundo preta
         // Limpar o ecrã
@@ -439,5 +446,30 @@ public class FirstScreen implements Screen {
         }
 
     }
+    public class Tiro {
+        public Rectangle bounds;
+        public float velocidade = 300; // pixels por segundo
+
+        public Tiro(float x, float y) {
+            bounds = new Rectangle(x, y, 8, 8); // tamanho do tiro
+        }
+
+        public void update(float delta, Rectangle alvo) {
+            // Calcular direção em linha reta para o inimigo
+            float dx = alvo.x + alvo.width / 2 - (bounds.x + bounds.width / 2);
+            float dy = alvo.y + alvo.height / 2 - (bounds.y + bounds.height / 2);
+            float comprimento = (float) Math.sqrt(dx * dx + dy * dy);
+            dx /= comprimento;
+            dy /= comprimento;
+
+            bounds.x += dx * velocidade * delta;
+            bounds.y += dy * velocidade * delta;
+        }
+
+        public boolean colideCom(Rectangle alvo) {
+            return bounds.overlaps(alvo);
+        }
+    }
+    private Array<Tiro> tiros;
 
 }
