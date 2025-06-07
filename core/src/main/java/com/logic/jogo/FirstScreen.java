@@ -31,18 +31,17 @@ public class FirstScreen implements Screen {
     Texture inimigoTextura;
     Texture obstaculoTextura;
     Texture backgroundTexture;
-
+    Texture portalTextura;
     // Declare camera and viewport
     OrthographicCamera camera;
     Viewport viewport;
-    Texture portalTextura;
     Rectangle portal;
 
     // Declare jogador, inimigo, obstáculo e outros objetos do jogo
     Rectangle jogador;
     Rectangle inimigo;
     Rectangle obstaculo;
-
+    //ArrayList<Rectangle> portal;
     // Array de obstáculos
     ArrayList<Rectangle> obstaculos;
     // Array de inimigos
@@ -85,8 +84,8 @@ public class FirstScreen implements Screen {
 
 // Criar retângulo do portal
         portal = new Rectangle();
-        portal.x = 700;
-        portal.y = 500;
+        portal.x = 250;
+        portal.y = 100;
         portal.width = 48;
         portal.height = 48;
 
@@ -231,8 +230,9 @@ public class FirstScreen implements Screen {
          loteDesenho.draw(inimigoTextura, inimigo.x, inimigo.y, inimigo.width, inimigo.height);
         }
 // Desenhar o portal
-        loteDesenho.draw(portalTextura, portal.x, portal.y, portal.width, portal.height);
-
+        for (int i = 0; i < 2; i++) {
+            loteDesenho.draw(portalTextura, portal.x, portal.y, portal.width, portal.height);
+        }
         // Finalizar lote de desenho
         loteDesenho.end();
 
@@ -259,7 +259,7 @@ public class FirstScreen implements Screen {
         // Verificar se jogador entrou no portal
         if (jogador.overlaps(portal)) {
             musicaFundo.stop(); // parar música ao mudar de ecrã (opcional)
-          //  ((Principal) Gdx.app.getApplicationListener()).setScreen(new SecondScreen());
+           ((Principal) Gdx.app.getApplicationListener()).setScreen(new SecondScreen());
 
         }
     }
