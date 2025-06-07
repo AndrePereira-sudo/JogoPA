@@ -13,4 +13,8 @@ public class Principal extends Game {
         setScreen(new FirstScreen());
 
     }
+
+    public void setScreen(SecondScreen secondScreen) {
+
+    }
 }
