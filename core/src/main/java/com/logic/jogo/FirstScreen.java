@@ -40,9 +40,7 @@ public class FirstScreen implements Screen {
     ArrayList<Rectangle> obstaculos;
     // Array de inimigos
     ArrayList<Rectangle> inimigos;
-    // Array de jogadores
-    ArrayList<Rectangle> jogadores;
-    // Array de texturas
+     // Array de texturas
     ArrayList<Texture> texturas;
     // Array de sons
     ArrayList<Sound> sons;
@@ -87,7 +85,7 @@ public class FirstScreen implements Screen {
         jogador.y = 10;
         jogador.width = 32;
         jogador.height = 32;
-        jogador = Jogador.criarJogador();// Chamar o método estático para criar o jogador
+ //       jogador = Jogador.criarJogador();// Chamar o método estático para criar o jogador
 
         // Inicializar inimigo
         inimigo = new Rectangle();
@@ -204,7 +202,7 @@ public class FirstScreen implements Screen {
         // Desenhar jogador
         loteDesenho.draw(jogadorTextura, jogador.x, jogador.y, jogador.width, jogador.height);
         // Desenhar inimigo
-        loteDesenho.draw(inimigoTextura, inimigo.x, inimigo.y, inimigo.width, inimigo.height);
+       // loteDesenho.draw(inimigoTextura, inimigo.x, inimigo.y, inimigo.width, inimigo.height);
         // Desenhar obstáculos
         for (Rectangle obstaculo : obstaculos) { // Verificar se "obstaculos" está inicializado e não é null
             loteDesenho.draw(obstaculoTextura, obstaculo.x, obstaculo.y, obstaculo.width, obstaculo.height);
@@ -237,15 +235,14 @@ public class FirstScreen implements Screen {
                 inimigo.y += 100 * Gdx.graphics.getDeltaTime(); // Mover para cima
             } else if (inimigo.y > jogador.y) {
                 inimigo.y -= 100 * Gdx.graphics.getDeltaTime();
-    }
+            }
         }
         // Verificar colisões com obstáculos
         checkCollisions();
         // Verificar se jogador entrou no portal
         if (jogador.overlaps(portal)) {
             musicaFundo.stop(); // parar música ao mudar de ecrã (opcional)
-           // ((Principal) Gdx.app.getApplicationListener()).setScreen(new SecondScreen());
-           ((Principal) Gdx.app.getApplicationListener()).setScreen(new SecondScreen((int) jogador.x, (int) jogador.y));
+            ((Principal) Gdx.app.getApplicationListener()).setScreen(new SecondScreen((int) jogador.x, (int) jogador.y));
         }
     }
 
@@ -320,7 +317,7 @@ public class FirstScreen implements Screen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 
         // Atualizar a viewport com a nova largura e altura
-        viewport.update(width, height, true);
+       // viewport.update(width, height, true);
         viewport = new StretchViewport(width, height, camera);
         // Aplicar a viewport
         viewport.apply();
@@ -328,19 +325,11 @@ public class FirstScreen implements Screen {
         camera.setToOrtho(false, width, height);
         // Atualizar a câmara com a nova largura e altura
         camera.update();
-        // Atualizar o lote de desenho
-        loteDesenho.setProjectionMatrix(camera.combined);
-
-        viewport.update(width, height, true);
-
+        // viewport.update(width, height, true);
         // Atualizar a viewport
-        camera.setToOrtho(false, width, height);
+        //camera.setToOrtho(false, width, height);
         viewport.update(width, height);
-
-        // Atualizar a câmara
-        camera.update();
-
-        // Atualizar o lote de desenho
+            // Atualizar o lote de desenho
         loteDesenho.setProjectionMatrix(camera.combined);
 
     }
