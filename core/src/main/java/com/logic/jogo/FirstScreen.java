@@ -51,8 +51,7 @@ public class FirstScreen implements Screen {
     private Sound somColisao;
     private Music musicaFundo;
 
-
-    // This is the constructor of the screen. You can initialize your screen here.
+       // This is the constructor of the screen. You can initialize your screen here.
     @Override
     public void show() {
 
@@ -245,8 +244,8 @@ public class FirstScreen implements Screen {
         // Verificar se jogador entrou no portal
         if (jogador.overlaps(portal)) {
             musicaFundo.stop(); // parar música ao mudar de ecrã (opcional)
-            ((Principal) Gdx.app.getApplicationListener()).setScreen(new SecondScreen());
-           // ((Principal) Gdx.app.getApplicationListener()).setScreen(new SecondScreen(jogador.x, jogador.y));
+           // ((Principal) Gdx.app.getApplicationListener()).setScreen(new SecondScreen());
+           ((Principal) Gdx.app.getApplicationListener()).setScreen(new SecondScreen((int) jogador.x, (int) jogador.y));
         }
     }
 
