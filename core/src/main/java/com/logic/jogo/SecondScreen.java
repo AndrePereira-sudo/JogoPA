@@ -1,26 +1,47 @@
+
 package com.logic.jogo;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import java.awt.*;
 
 // Este é o segundo ecrã do jogo, onde a nova dimensão é apresentada
 // É implementado a interface Screen do libGDX para gerenciar o ciclo de vida do ecrã
 // É necessário importar as classes do libGDX para manipular gráficos e renderização
 
 public class SecondScreen implements Screen {
+    // Atributos necessários para o segundo ecrã
+    // SpriteBatch é usado para desenhar texturas na tela
+
     //SpriteBatch batch;
     // Texture background;
     private SpriteBatch batch;
     private Texture background;
+    private Texture jogadorTextura;
+    //private OrthographicCamera camera;
+    //private Viewport viewport;
+    private Rectangle jogador;
 
+    public SecondScreen(int jogadorX, int jogadorY) {
+        jogador = new Rectangle(jogadorX, jogadorY, 32, 32);
+    }
     @Override
     public void show() {
+        // Inicializar o SpriteBatch e as texturas necessárias para o segundo ecrã
+
         batch   = new SpriteBatch();
         background = new Texture("dimensao2.png"); // imagem da nova dimensão ou ecran}
+        jogadorTextura = new Texture("jogador.png");
+
+     //  camera = new OrthographicCamera();
+     //  camera.setToOrtho(false, 800, 600);
+     //  viewport = new StretchViewport(800, 600, camera);
+     //  viewport.apply();
     }
-        @Override
+
+     @Override
     public void render(float delta) {
 
         // Limpar a tela com uma cor de fundo
@@ -32,12 +53,14 @@ public class SecondScreen implements Screen {
             batch.begin();
         // Desenhar o fundo da nova dimensão
        batch.draw(background, 0, 0);
-
-        batch.end();
+       batch.draw(jogadorTextura, jogador.x, jogador.y, jogador.width, jogador.height);
+       batch.end();
     }
 
-    @Override
-    public void resize(int width, int height) {}
+   @Override
+    public void resize(int width, int height) {
+
+   }
     @Override
     public void pause() {}
     @Override
