@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
@@ -148,6 +149,22 @@ public class FirstScreen implements Screen {
         System.out.println(">> Lote de desenho configurado com a câmara da viewport");
 
     }
+    private Rectangle encontrarInimigoMaisProximo() {
+        Rectangle maisProximo = null;
+        float menorDistancia = Float.MAX_VALUE;
+
+        for (Rectangle inimigo : inimigos) {
+            float distancia = Vector2.dst(jogador.x, jogador.y, inimigo.x, inimigo.y);
+            if (distancia < menorDistancia) {
+                menorDistancia = distancia;
+                maisProximo = inimigo;
+            }
+        }
+
+        return maisProximo;
+    }
+
+
 
     // Método para gerar planetas aleatórios
     private void gerarPlanetasAleatorios() {
@@ -330,6 +347,8 @@ public class FirstScreen implements Screen {
             //musicaFundo.stop(); // parar música ao mudar de ecrã (opcional)
             ((Principal) Gdx.app.getApplicationListener()).setScreen(new SecondScreen((int) jogador.x, (int) jogador.y));
         }
+
+        /*
         for (int i = 0; i < lasers.size(); i++) {
             Laser laser = lasers.get(i);
             laser.atualizar(Gdx.graphics.getDeltaTime());
@@ -340,8 +359,26 @@ public class FirstScreen implements Screen {
                 lasers.remove(i);
                 i--;
             }
+            */
+        for (int i = 0; i < lasers.size(); i++) {
+            Laser laser = lasers.get(i);
+
+            for (int j = 0; j < inimigos.size(); j++) {
+                if (laser.forma.overlaps(inimigos.get(j))) {
+                    lasers.remove(i);
+                    inimigos.remove(j);
+
+                    sons.get(0).play(); // Explosão
+                    // Aqui você pode também adicionar uma animação de explosão
+
+                    i--;
+                    break;
+                }
+            }
         }
+
     }
+    
 
     private float tempoEntreTiros = 0.3f;
     private float tempoDesdeUltimoTiro = 0f;
@@ -387,7 +424,23 @@ public class FirstScreen implements Screen {
             jogador.y -= lspeed;
 
         }
+        if ((Gdx.input.isKeyPressed(Input.Keys.SPACE) || Gdx.input.justTouched())
+            && tempoDesdeUltimoTiro > tempoEntreTiros) {
 
+            Rectangle alvo = encontrarInimigoMaisProximo();
+
+            if (alvo != null) {
+                Laser novoLaser = new Laser(
+                    jogador.x + jogador.width / 2,
+                    jogador.y + jogador.height / 2,
+                    alvo
+                );
+                lasers.add(novoLaser);
+                sons.get(1).play(); // Som de disparo
+                tempoDesdeUltimoTiro = 0;
+            }
+        }
+/*
         // Disparo com espaço ou clique
         if ((Gdx.input.isKeyPressed(Input.Keys.SPACE) || Gdx.input.justTouched())
             && tempoDesdeUltimoTiro > tempoEntreTiros) {
@@ -396,7 +449,7 @@ public class FirstScreen implements Screen {
             sons.get(1).play(); // Som de disparo (laser)
             tempoDesdeUltimoTiro = 0;
         }
-
+*/
         // Movimento com rato (se quiser)
         if (Gdx.input.isTouched()) {
             jogador.x += Math.signum(lmousePos.x - jogador.x) * speed;
