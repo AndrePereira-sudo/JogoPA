@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
@@ -40,7 +41,7 @@ public class FirstScreen implements Screen {
     ArrayList<Rectangle> obstaculos;
     // Array de inimigos
     ArrayList<Rectangle> inimigos;
-     // Array de texturas
+    // Array de texturas
     ArrayList<Texture> texturas;
     // Array de sons
     ArrayList<Sound> sons;
@@ -48,12 +49,13 @@ public class FirstScreen implements Screen {
     // Declare som de colisão e música de fundo
     private Sound somColisao;
     private Music musicaFundo;
+    private float rotacaoPortal = 0f;
 
-       // This is the constructor of the screen. You can initialize your screen here.
+    // This is the constructor of the screen. You can initialize your screen here.
     @Override
     public void show() {
 
-         // Inicializar lote de desenho
+        // Inicializar lote de desenho
         loteDesenho = new SpriteBatch();
 
         // Criar câmara ortográfica
@@ -68,7 +70,7 @@ public class FirstScreen implements Screen {
         // Carregar texturas
         jogadorTextura = new Texture("jogador.png");
         inimigoTextura = new Texture("inimigo.png");
-        obstaculoTextura = new Texture("planeta64.png");
+        obstaculoTextura = new Texture("planeta.png");
         backgroundTexture = new Texture("background.png");
         portalTextura = new Texture("portal.png"); // carregar textuta do portal
 
@@ -80,20 +82,23 @@ public class FirstScreen implements Screen {
         portal.height = 48;
 
         // Inicializar jogador
-        jogador = new Rectangle();// Criar um novo retângulo para o jogador
-        jogador.x = 10;
-        jogador.y = 10;
-        jogador.width = 32;
-        jogador.height = 32;
- //       jogador = Jogador.criarJogador();// Chamar o método estático para criar o jogador
+        //jogador = new Rectangle();// Criar um novo retângulo para o jogador
+        // jogador.x = 10;
+        //  jogador.y = 10;
+        // jogador.width = 32;
+        // jogador.height = 32;
+        jogador = Jogador.criarJogador();// Chamar o método estático para criar o jogador
 
         // Inicializar inimigo
-        inimigo = new Rectangle();
-        inimigo.x = 600;
-        inimigo.y = 10;
-        inimigo.width = 32;
-        inimigo.height = 32;
-        inimigos = Inimigo.criarInimigos();
+        // inimigo = new Rectangle();// Criar um novo retângulo para o inimigo
+        //inimigo.x = 600;
+        // inimigo.y = 10;
+        // inimigo.width = 32;
+        //inimigo.height = 32;
+        inimigos = Inimigo.criarInimigos();// Chamar o método estático para criar os inimigos
+
+        // Gerar planetas aleatórios
+        gerarPlanetasAleatorios();
 
         // Inicializar texturas
         texturas = new ArrayList<>();
@@ -106,26 +111,13 @@ public class FirstScreen implements Screen {
         musicaFundo = Gdx.audio.newMusic(Gdx.files.internal("musica_fundo.mp3")); // Substitua pelo nome do seu arquivo
         musicaFundo.setLooping(true); // Para tocar continuamente
         musicaFundo.setVolume(0.5f); // Volume entre 0.0 e 1.0
-        musicaFundo.play();
-
-        sons = new ArrayList<>();
-
-        sons.add(Gdx.audio.newSound(Gdx.files.internal("laser.mp3")));
-
-        somColisao = Gdx.audio.newSound(Gdx.files.internal("Colisao.mp3"));
-        sons.add(somColisao);
-
-        //Inicializar obstáculos
-        // Criar obstáculos
-        obstaculos = new ArrayList<>();
-        for (int i = 0; i < 8; i++) {
-            Rectangle obstaculo = new Rectangle();
-            obstaculo.x = 50 + (i % 4) * 150;// Posição X do obstáculo
-            obstaculo.y = 400 - (i / 4) * 150;// Posição Y do obstáculo
-            obstaculo.width = 64; // Largura do obstáculo
-            obstaculo.height = 64;// Altura do obstáculo
-            obstaculos.add(obstaculo);
-        }
+        musicaFundo.play();// Iniciar a música de fundo
+        somColisao = Gdx.audio.newSound(Gdx.files.internal("colisao.mp3"));// Som colisão
+        sons = new ArrayList<>();// Inicializar a lista de sons
+        // Adicionar sons à lista
+        sons.add(Gdx.audio.newSound(Gdx.files.internal("explosao.mp3"))); // Substitua pelo nome do seu arquivo
+        sons.add(Gdx.audio.newSound(Gdx.files.internal("laser.mp3")));//Som disparo
+        sons.add(somColisao);// Adicionar som de colisão à lista
 
 
         // Configurar lote de desenho
@@ -154,6 +146,71 @@ public class FirstScreen implements Screen {
         System.out.println(">> Lote de desenho configurado com a câmara da viewport");
 
     }
+
+    // Método para gerar planetas aleatórios
+    private void gerarPlanetasAleatorios() {
+        obstaculos = new ArrayList<>();
+
+        // Definir constantes para o número de planetas e suas dimensões
+        final int NUM_PLANETAS = 7; // ou outro número
+        final int PLANETA_LARGURA = 48;
+        final int PLANETA_ALTURA = 48;
+        // nao sobrepor planetas sobre outros planetas ou sobre o jogador
+
+        // Gerar planetas aleatórios
+        for (int i = 0; i < NUM_PLANETAS; i++) {
+            Rectangle obstaculo = new Rectangle();
+            boolean sobrepoeJogador;
+
+            do {
+                float x = MathUtils.random(0, Gdx.graphics.getWidth() - PLANETA_LARGURA);
+                float y = MathUtils.random(0, Gdx.graphics.getHeight() - PLANETA_ALTURA);
+
+                obstaculo.set(x, y, PLANETA_LARGURA, PLANETA_ALTURA);
+
+                // Verifica se o obstáculo está sobreposto ao jogador
+
+                sobrepoeJogador = jogador.overlaps(obstaculo);
+                // Verifica se o obstáculo está sobreposto a outros obstáculos
+                for (Rectangle outroObstaculo : obstaculos) {
+                    if (obstaculo.overlaps(outroObstaculo)) {
+                        sobrepoeJogador = true; // Se sobrepõe a outro obstáculo, repete o loop
+                        break; // Sai do loop se encontrar uma sobreposição
+                    }
+                }
+
+            } while (sobrepoeJogador);
+
+            obstaculos.add(obstaculo);
+        }
+        //metodo para gerar inimigos aleatórios
+        inimigos = new ArrayList<>();
+        for (int i = 0; i < 5; i++) {
+            Rectangle inimigo = new Rectangle();
+            inimigo.x = MathUtils.random(0, Gdx.graphics.getWidth() - 32);
+            inimigo.y = MathUtils.random(0, Gdx.graphics.getHeight() - 32);
+            inimigo.width = 32;
+            inimigo.height = 32;
+            inimigos.add(inimigo);
+        }
+
+        // Garantir que portal não está proximo dos obtaculos
+        for (Rectangle obstaculo : obstaculos) {
+            // Verificar se o portal está sobreposto a algum obstáculo
+            if (portal.overlaps(obstaculo)) {
+                // Reposicionar o portal para evitar sobreposição
+                portal.x = MathUtils.random(0, Gdx.graphics.getWidth() - portal.width);
+                portal.y = MathUtils.random(0, Gdx.graphics.getHeight() - portal.height);
+            }
+        }
+
+        // Garantir que o portal não está proximo ao jogador
+        if (portal.overlaps(jogador)) {
+            // Reposicionar o portal para evitar sobreposição com o jogador
+            portal.x = MathUtils.random(0, Gdx.graphics.getWidth() - portal.width);
+            portal.y = MathUtils.random(0, Gdx.graphics.getHeight() - portal.height);
+        }
+    }
 // This method is called every frame to render the screen.
 
     @Override
@@ -168,28 +225,24 @@ public class FirstScreen implements Screen {
         logic();
         draw();
 
-
         // Atualizar lógica do jogo
-      viewport.apply();
+        viewport.apply();
         // Atualizar câmara
 
-      camera.update();
-      loteDesenho.setProjectionMatrix(camera.combined);
+        camera.update();
+        loteDesenho.setProjectionMatrix(camera.combined);
 
-      loteDesenho.begin();
-      //loteDesenho.draw(jogadorTextura, 32, 32);
+        loteDesenho.begin();
+        //loteDesenho.draw(jogadorTextura, 32, 32);
 
-      loteDesenho.end();
+        loteDesenho.end();
     }
 
     private void draw() {
-// Desenhar o ecrã
+        // Desenhar o ecrã
         // Limpar o ecrã
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
-
-        // Limpar o ecrã
         Gdx.gl.glClearColor(0.1f, 0.1f, 0.1f, 1);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         // Aplicar a viewport
         ScreenUtils.clear(Color.BLACK);
@@ -202,7 +255,7 @@ public class FirstScreen implements Screen {
         // Desenhar jogador
         loteDesenho.draw(jogadorTextura, jogador.x, jogador.y, jogador.width, jogador.height);
         // Desenhar inimigo
-       // loteDesenho.draw(inimigoTextura, inimigo.x, inimigo.y, inimigo.width, inimigo.height);
+        // loteDesenho.draw(inimigoTextura, inimigo.x, inimigo.y, inimigo.width, inimigo.height);
         // Desenhar obstáculos
         for (Rectangle obstaculo : obstaculos) { // Verificar se "obstaculos" está inicializado e não é null
             loteDesenho.draw(obstaculoTextura, obstaculo.x, obstaculo.y, obstaculo.width, obstaculo.height);
@@ -210,12 +263,26 @@ public class FirstScreen implements Screen {
 
         // Desenhar inimigos
         for (Rectangle inimigo : inimigos) {
-         loteDesenho.draw(inimigoTextura, inimigo.x, inimigo.y, inimigo.width, inimigo.height);
+            loteDesenho.draw(inimigoTextura, inimigo.x, inimigo.y, inimigo.width, inimigo.height);
         }
-// Desenhar o portal
-        //for (int i = 0; i < 2; i++) {
-            loteDesenho.draw(portalTextura, portal.x, portal.y, portal.width, portal.height);
-        //}
+        // Desenhar o portal com rotação
+        rotacaoPortal -= 90 * Gdx.graphics.getDeltaTime(); // 90 gr
+        loteDesenho.draw(
+            portalTextura,
+            portal.x + portal.width / 2,  // centro x
+            portal.y + portal.height / 2, // centro y
+            portal.width / 2,             // origem da rotação x
+            portal.height / 2,            // origem da rotação y
+            portal.width,                 // largura
+            portal.height,                // altura
+            1f, 1f,                       // escala x, y
+            rotacaoPortal,                // rotação
+            0, 0,                         // recorte x, y
+            portalTextura.getWidth(),
+            portalTextura.getHeight(),
+            false, false                  // flipX, flipY
+        );
+
         // Finalizar lote de desenho
         loteDesenho.end();
 
@@ -238,10 +305,25 @@ public class FirstScreen implements Screen {
             }
         }
         // Verificar colisões com obstáculos
-        checkCollisions();
+        checkCollisions();// Verificar colisões entre o jogador e os obstáculos
+        // Verificar colisões entre o jogador e os inimigos
+        for (Rectangle inimigo : inimigos) {
+            if (jogador.overlaps(inimigo)) {
+                // Parar a música de fundo se estiver a tocar
+                if (musicaFundo.isPlaying()) {
+                    musicaFundo.pause();
+                    somColisao.play();
+                }
+                // Tocar som de colisão
+                somColisao.play();
+                // Reposicionar o jogador para evitar sobreposição
+                //  jogador.x = Math.max(jogador.x, inimigo.x + inimigo.width); // Reposicionar o jogador para a direita do inimigo
+            }
+        }
+
         // Verificar se jogador entrou no portal
         if (jogador.overlaps(portal)) {
-            musicaFundo.stop(); // parar música ao mudar de ecrã (opcional)
+            //musicaFundo.stop(); // parar música ao mudar de ecrã (opcional)
             ((Principal) Gdx.app.getApplicationListener()).setScreen(new SecondScreen((int) jogador.x, (int) jogador.y));
         }
     }
@@ -262,8 +344,8 @@ public class FirstScreen implements Screen {
         // Mover o jogador em direção à posição do mouse
         // Se o mouse estiver pressionado, mover o jogador em direção à posição do mouse
         if (Gdx.input.isTouched()) {
-        jogador.x += Math.signum(mousePos.x - jogador.x) * speed;
-        jogador.y += Math.signum(mousePos.y - jogador.y) * speed;
+            jogador.x += Math.signum(mousePos.x - jogador.x) * speed;
+            jogador.y += Math.signum(mousePos.y - jogador.y) * speed;
         }
         jogador.x = Math.max(0, Math.min(jogador.x, viewport.getWorldWidth() - jogador.width));
         jogador.y = Math.max(0, Math.min(jogador.y, viewport.getWorldHeight() - jogador.height));
@@ -271,43 +353,92 @@ public class FirstScreen implements Screen {
 
     // Verificar colisões com obstáculos
     // Aqui implementar a lógica de colisão entre o jogador e os obstáculos
-    // se o jogador colidir com um obstáculo, pode empurrá-lo para trás ou impedir o movimentoized.
 
     private void checkCollisions() {
+        // Verificar colisões entre o jogador e os obstáculos
         boolean houveColisao = false;
-
         for (Rectangle obstaculo : obstaculos) {
             if (jogador.overlaps(obstaculo)) {
-                // Parar a música de fundo
+                // Parar a música de fundo se estiver a tocar
                 if (musicaFundo.isPlaying()) {
-                    musicaFundo.pause();
+                    musicaFundo.play();
                 }
-
                 // Tocar som de colisão
                 somColisao.play();
 
-                // Resolver colisão (empurrar o jogador para trás)
-                if (jogador.x < obstaculo.x) {
-                    jogador.x = obstaculo.x - jogador.width;
-                } else if (jogador.x > obstaculo.x + obstaculo.width) {
-                    jogador.x = obstaculo.x + obstaculo.width;
-                }
+                // Calcular as diferenças entre os centros dos retângulos
+                float jogadorCenterX = jogador.x + jogador.width / 2;
+                float jogadorCenterY = jogador.y + jogador.height / 2;
+                float obstaculoCenterX = obstaculo.x + obstaculo.width / 2;
+                float obstaculoCenterY = obstaculo.y + obstaculo.height / 2;
+                float diffX = jogadorCenterX - obstaculoCenterX;// diferença no eixo X
+                float diffY = jogadorCenterY - obstaculoCenterY;// Diferença entre os centros dos retângulos
+                float overlapX = (jogador.width / 2 + obstaculo.width / 2) - Math.abs(diffX);// sobreposição no eixo X
+                float overlapY = (jogador.height / 2 + obstaculo.height / 2) - Math.abs(diffY);// sobreposição no eixo Y
 
-                if (jogador.y < obstaculo.y) {
-                    jogador.y = obstaculo.y - jogador.height;
-                } else if (jogador.y > obstaculo.y + obstaculo.height) {
-                    jogador.y = obstaculo.y + obstaculo.height;
+                // Resolver a colisão no eixo com menos sobreposição
+                if (overlapX < overlapY) {
+                    // Corrigir no eixo X
+                    if (diffX > 0) {
+                        jogador.x += overlapX;// empurrar o jogador para a direita
+                    } else {
+                        jogador.x -= overlapX;// empurrar o jogador para a esquerda
+                    }
+                } else {
+                    // Corrigir no eixo Y
+                    if (diffY > 0) {
+                        jogador.y += overlapY;// empurrar o jogador para cima
+                    } else {
+                        jogador.y -= overlapY;// empurrar o jogador para baixo
+                    }
                 }
 
                 houveColisao = true;
             }
         }
 
-        // Retomar a música de fundo se não houve colisão
+        // Retomar a música se não houver colisão
         if (!houveColisao && !musicaFundo.isPlaying()) {
             musicaFundo.play();
         }
     }
+
+    /*
+    boolean houveColisao = false;
+
+    for (Rectangle obstaculo : obstaculos) {
+        if (jogador.overlaps(obstaculo)) {
+            // Parar a música de fundo
+            if (musicaFundo.isPlaying()) {
+                musicaFundo.pause();
+            }
+
+            // Tocar som de colisão
+            somColisao.play();
+
+            // Resolver colisão (empurrar o jogador para trás)
+            if (jogador.x < obstaculo.x) {
+                jogador.x = obstaculo.x - jogador.width;
+            } else if (jogador.x > obstaculo.x + obstaculo.width) {
+                jogador.x = obstaculo.x + obstaculo.width;
+            }
+
+            if (jogador.y < obstaculo.y) {
+                jogador.y = obstaculo.y - jogador.height;
+            } else if (jogador.y > obstaculo.y + obstaculo.height) {
+                jogador.y = obstaculo.y + obstaculo.height;
+            }
+
+            houveColisao = true;
+        }
+    }
+
+    // Retomar a música de fundo se não houve colisão
+    if (!houveColisao && !musicaFundo.isPlaying()) {
+        musicaFundo.play();
+    }
+}
+     */
     @Override
     public void resize(int width, int height) {
         // Resize your screen here. The parameters represent the new window size.
@@ -317,7 +448,7 @@ public class FirstScreen implements Screen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 
         // Atualizar a viewport com a nova largura e altura
-       // viewport.update(width, height, true);
+        // viewport.update(width, height, true);
         viewport = new StretchViewport(width, height, camera);
         // Aplicar a viewport
         viewport.apply();
@@ -329,7 +460,7 @@ public class FirstScreen implements Screen {
         // Atualizar a viewport
         //camera.setToOrtho(false, width, height);
         viewport.update(width, height);
-            // Atualizar o lote de desenho
+        // Atualizar o lote de desenho
         loteDesenho.setProjectionMatrix(camera.combined);
 
     }
@@ -366,26 +497,29 @@ public class FirstScreen implements Screen {
         for (Texture textura : texturas) {
             textura.dispose();
         }
-        // Dispose of sounds if necessary
+        // Dispose of sounds
         for (Sound som : sons) {
             som.dispose();
-            // If som is a Sound object, you would call som.dispose() if it were a Sound
-            // If som is not a Sound object, you may need to handle it differently
-            // Example: if som is a Sound object, you would call som.dispose()
-            if (som instanceof Sound) {
-                 ((Sound) som).dispose();
-            }
-            // If som is a Sound object, you would call som.dispose() if it were a Sound
-            // Dispose of sounds if necessary
-            if (som instanceof com.badlogic.gdx.audio.Sound) {
-                ((com.badlogic.gdx.audio.Sound) som).dispose();
-            } else if (som instanceof com.badlogic.gdx.audio.Music) {
-                ((com.badlogic.gdx.audio.Music) som).dispose();
-            }
-            if (musicaFundo != null) musicaFundo.dispose();
-            if (somColisao != null) somColisao.dispose();
-
         }
+        
+        if (somColisao != null) {
+            somColisao.stop(); // Stop the collision sound if it's playing
+            somColisao.dispose(); // Dispose of the collision sound
+        }
+        // Dispose of the camera and viewport
+        if (camera != null) camera = null; // Dispose of the camera
+        if (viewport != null) viewport = null; // Dispose of the viewport
+
+        // Dispose of the viewport
+        if (viewport != null) {
+            viewport.getCamera().position.set(0, 0, 0); // Reset camera position
+            viewport.getCamera().update(); // Update the camera
+            viewport = null; // Dispose of the viewport
+        }
+
+        // Dispose of the music and sound effects
+        if (musicaFundo != null) musicaFundo.dispose();// Dispose of the music
+        //if (somColisao != null) somColisao.dispose();// Dispose of the music
 
     }
 
