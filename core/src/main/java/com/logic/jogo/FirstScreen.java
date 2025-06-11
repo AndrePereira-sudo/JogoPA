@@ -200,7 +200,7 @@ public class FirstScreen implements Screen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         // novo Libgdx game site
-        imput();
+        input();
         logic();
         draw();
 
@@ -320,7 +320,7 @@ public class FirstScreen implements Screen {
     private float tempoEntreTiros = 0.3f;
     private float tempoDesdeUltimoTiro = 0f;
 
-    private void imput() {
+    private void input() {
         // Processar entrada do jogador
         float speed = 200 * Gdx.graphics.getDeltaTime();
         if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) jogador.x -= speed;
@@ -356,6 +356,7 @@ public class FirstScreen implements Screen {
             jogador.x -= lspeed;
             jogador.y -= lspeed;
         }
+        // Verificar se o jogador pressionou a tecla de disparo ou clicou com o mouse
         if ((Gdx.input.isKeyPressed(Input.Keys.SPACE) || Gdx.input.justTouched())
             && tempoDesdeUltimoTiro > tempoEntreTiros) {
 
@@ -378,9 +379,9 @@ public class FirstScreen implements Screen {
             jogador.x += Math.signum(lmousePos.x - jogador.x) * speed;
             jogador.y += Math.signum(lmousePos.y - jogador.y) * speed;
         }
-
-      //  jogador.x = Math.max(0, Math.min(jogador.x, viewport.getWorldWidth() - jogador.width));
-       // jogador.y = Math.max(0, Math.min(jogador.y, viewport.getWorldHeight() - jogador.height));
+     // Limitar o jogador dentro dos limites da viewport
+      jogador.x = Math.max(0, Math.min(jogador.x, viewport.getWorldWidth() - jogador.width));
+      jogador.y = Math.max(0, Math.min(jogador.y, viewport.getWorldHeight() - jogador.height));
 
     }
 
