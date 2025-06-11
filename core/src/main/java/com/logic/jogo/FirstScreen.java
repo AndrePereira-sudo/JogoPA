@@ -45,6 +45,8 @@ public class FirstScreen implements Screen {
     ArrayList<Texture> texturas;
     // Array de sons
     ArrayList<Sound> sons;
+    ArrayList<Laser> lasers = new ArrayList<>();
+    Texture laserTextura = new Texture("laser2.png"); // Crie uma textura laser.png
 
     // Declare som de colisão e música de fundo
     private Sound somColisao;
@@ -282,7 +284,9 @@ public class FirstScreen implements Screen {
             portalTextura.getHeight(),
             false, false                  // flipX, flipY
         );
-
+        for (Laser laser : lasers) {
+            loteDesenho.draw(laserTextura, laser.forma.x, laser.forma.y, laser.forma.width, laser.forma.height);
+        }
         // Finalizar lote de desenho
         loteDesenho.end();
 
@@ -326,7 +330,21 @@ public class FirstScreen implements Screen {
             //musicaFundo.stop(); // parar música ao mudar de ecrã (opcional)
             ((Principal) Gdx.app.getApplicationListener()).setScreen(new SecondScreen((int) jogador.x, (int) jogador.y));
         }
+        for (int i = 0; i < lasers.size(); i++) {
+            Laser laser = lasers.get(i);
+            laser.atualizar(Gdx.graphics.getDeltaTime());
+
+            // Remover laser se sair da tela
+            if (laser.forma.x > viewport.getWorldWidth() || laser.forma.x < 0 ||
+                laser.forma.y > viewport.getWorldHeight() || laser.forma.y < 0) {
+                lasers.remove(i);
+                i--;
+            }
+        }
     }
+
+    private float tempoEntreTiros = 0.3f;
+    private float tempoDesdeUltimoTiro = 0f;
 
     private void imput() {
         // Processar entrada do jogador
@@ -349,6 +367,45 @@ public class FirstScreen implements Screen {
         }
         jogador.x = Math.max(0, Math.min(jogador.x, viewport.getWorldWidth() - jogador.width));
         jogador.y = Math.max(0, Math.min(jogador.y, viewport.getWorldHeight() - jogador.height));
+
+
+        float lspeed = 200 * Gdx.graphics.getDeltaTime();
+        tempoDesdeUltimoTiro += Gdx.graphics.getDeltaTime();
+
+        // Movimentação
+        if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) jogador.x -= lspeed;
+        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) jogador.x += lspeed;
+        if (Gdx.input.isKeyPressed(Input.Keys.UP)) jogador.y += lspeed;
+        if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) jogador.y -= lspeed;
+
+        // Converter posição do rato para coordenadas do jogo
+
+        Vector3 lmousePos = new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0);
+        camera.unproject(lmousePos);
+        if (Gdx.input.isTouched()) {
+            jogador.x -= lspeed;
+            jogador.y -= lspeed;
+
+        }
+
+        // Disparo com espaço ou clique
+        if ((Gdx.input.isKeyPressed(Input.Keys.SPACE) || Gdx.input.justTouched())
+            && tempoDesdeUltimoTiro > tempoEntreTiros) {
+            Laser novoLaser = new Laser(jogador.x + jogador.width / 2, jogador.y + jogador.height / 2, lmousePos);
+            lasers.add(novoLaser);
+            sons.get(1).play(); // Som de disparo (laser)
+            tempoDesdeUltimoTiro = 0;
+        }
+
+        // Movimento com rato (se quiser)
+        if (Gdx.input.isTouched()) {
+            jogador.x += Math.signum(lmousePos.x - jogador.x) * speed;
+            jogador.y += Math.signum(lmousePos.y - jogador.y) * speed;
+        }
+
+        jogador.x = Math.max(0, Math.min(jogador.x, viewport.getWorldWidth() - jogador.width));
+        jogador.y = Math.max(0, Math.min(jogador.y, viewport.getWorldHeight() - jogador.height));
+
     }
 
     // Verificar colisões com obstáculos
