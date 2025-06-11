@@ -68,16 +68,6 @@ public class FirstScreen implements Screen {
         Gdx.gl.glClearColor(0, 0, 0, 1); // Cor de fundo preta
         // Limpar o ecrã
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
-        // Configurar a câmara
-       // camera.setToOrtho(false, 800, 600);
-        // Atualizar a câmara
-       // camera.update();
-        // Configurar a viewport
-        //viewport = new StretchViewport(800, 600, camera);
-        // Aplicar a viewport
-       // viewport.apply();
-        // Configurar o lote de desenho
-       // loteDesenho.setProjectionMatrix(viewport.getCamera().combined);
 
         // Inicializar texturas
         jogadorTextura = new Texture("jogador.png");
@@ -489,33 +479,7 @@ public class FirstScreen implements Screen {
         portalTextura.dispose();
         // Dispose of sprite batch
         loteDesenho.dispose();
-        // Dispose of other resources if necessary
-        for (Texture textura : texturas) {
-            textura.dispose();
-        }
-        // Dispose of sounds
-        for (Sound som : sons) {
-            som.dispose();
-        }
 
-        if (somColisao != null) {
-            somColisao.stop(); // Stop the collision sound if it's playing
-            somColisao.dispose(); // Dispose of the collision sound
-        }
-        // Dispose of the camera and viewport
-        if (camera != null) camera = null; // Dispose of the camera
-        if (viewport != null) viewport = null; // Dispose of the viewport
-
-        // Dispose of the viewport
-        if (viewport != null) {
-            viewport.getCamera().position.set(0, 0, 0); // Reset camera position
-            viewport.getCamera().update(); // Update the camera
-            viewport = null; // Dispose of the viewport
-        }
-
-        // Dispose of the music and sound effects
-        if (musicaFundo != null) musicaFundo.dispose();// Dispose of the music
-        //if (somColisao != null) somColisao.dispose();// Dispose of the music
 
     }
 

@@ -8,20 +8,13 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import java.awt.*;
 
 // Este é o segundo ecrã do jogo, onde a nova dimensão é apresentada
-// É implementado a interface Screen do libGDX para gerenciar o ciclo de vida do ecrã
-// É necessário importar as classes do libGDX para manipular gráficos e renderização
 
 public class SecondScreen implements Screen {
     // Atributos necessários para o segundo ecrã
-    // SpriteBatch é usado para desenhar texturas na tela
-
-    //SpriteBatch batch;
-    // Texture background;
+        // Texture background;
     private SpriteBatch batch;
     private Texture background;
     private Texture jogadorTextura;
-    //private OrthographicCamera camera;
-    //private Viewport viewport;
     private Rectangle jogador;
 
     public SecondScreen(int jogadorX, int jogadorY) {
@@ -35,10 +28,6 @@ public class SecondScreen implements Screen {
         background = new Texture("dimensao2.png"); // imagem da nova dimensão ou ecran}
         jogadorTextura = new Texture("jogador.png");
 
-     //  camera = new OrthographicCamera();
-     //  camera.setToOrtho(false, 800, 600);
-     //  viewport = new StretchViewport(800, 600, camera);
-     //  viewport.apply();
     }
 
      @Override
@@ -49,7 +38,6 @@ public class SecondScreen implements Screen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);// Limpar o buffer de cor
 
         // Desenhar o fundo da nova dimensão
-
             batch.begin();
         // Desenhar o fundo da nova dimensão
        batch.draw(background, 0, 0);
