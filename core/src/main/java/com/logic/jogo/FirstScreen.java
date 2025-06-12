@@ -378,7 +378,7 @@ public class FirstScreen implements Screen {
         }
 
     }
-
+    
 
     private float tempoEntreTiros = 0.3f;
     private float tempoDesdeUltimoTiro = 0f;
