@@ -17,10 +17,9 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import com.badlogic.gdx.graphics.Color;
 import java.util.ArrayList;
 import com.badlogic.gdx.math.Rectangle;
-
 /** First screen of the application. Displayed after the application is created. */
 public class FirstScreen implements Screen {
-
+//A
     SpriteBatch loteDesenho;
 
     // Carregar texturas
@@ -378,7 +377,7 @@ public class FirstScreen implements Screen {
         }
 
     }
-    
+
 
     private float tempoEntreTiros = 0.3f;
     private float tempoDesdeUltimoTiro = 0f;
