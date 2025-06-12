@@ -121,7 +121,6 @@ public class FirstScreen implements Screen {
         }
         return maisProximo;
     }
-
     // Método para gerar planetas aleatórios
     private void gerarPlanetasAleatorios() {
         obstaculos = new ArrayList<>();
